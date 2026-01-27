@@ -1,0 +1,36 @@
+{% load static %}
+{% include 'layout/partials/admin/header.html' %}
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Event Edit</h6>
+                <form method="post" action="{% url 'app_core:evtup' evtv.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="label">Name</label>
+                        <input type="text" class="form-control" id="exampleInputEventtype" name="name" value="{{ evtv.name }}"
+                            aria-describedby="imageHelp">
+                        
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="label">Description</label>
+                        <input type="text" class="form-control" id="exampleInputEventtype" name="description" value="{{ evtv.description }}"
+                            aria-describedby="imageHelp">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="name" class="label">Image</label>
+                        <img src="/media/{{evtv.image}}" style="width: 250px;">
+                        <br><br>
+                        <input type="file" class="form-control" id="exampleInputImage" name="img"
+                            aria-describedby="imageHelp">   
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'layout/partials/admin/footer.html' %}
