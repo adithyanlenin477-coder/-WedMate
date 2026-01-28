@@ -1,0 +1,32 @@
+{% load static %}
+{% include 'layout/partials/admin/header.html' %}
+<div class="col-sm-12 col-xl-12">
+                        <div class="bg-secondary rounded h-100 p-4">
+                            <h6 class="mb-4">Event View</h6>
+                            <table class="table table-dark">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Nos</th>
+                                        <th scope="col">Events</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Delete</th>
+                                        <th scope="col">Update</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in evnt %}
+                                    <tr>
+                                        <th scope="row">{{ forloop.counter }}</th> 
+                                        <td>{{ i.name }}</td>
+                                        <td>{{ i.description }}</td>
+                                        <td><img src="/media/{{ i.image }}" alt="" width="150px"></td>
+                                        <td><a href="{% url 'app_core:evtdl' i.id %}"><button type="submit" class="btn btn-primary">Delete</button></a></td> 
+                                        <td><a href="{% url 'app_core:evtup' i.id %}"><button type="submit" class="btn bg-secondary">Update</button></a></td>   
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+{% include 'layout/partials/admin/footer.html' %}

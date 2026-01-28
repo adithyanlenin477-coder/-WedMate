@@ -1,0 +1,43 @@
+{% load static %}
+{% include 'layout/partials/customer/header.html' %}
+
+<section class="upcoming-meetings" id="meetings">
+  <div class="container">
+    <div class="row">
+
+      <!-- PAGE HEADING -->
+      <div class="col-lg-12">
+        <div class="section-heading">
+          <h2>Price Details</h2>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+  <div class="card-body text-center">
+    <h3 class="mb-0">{{ service.name }}</h3>
+  </div>
+</div>
+
+      <!-- RIGHT SIDE : SERVICE PRICE & IMAGE -->
+      <div class="row">
+      {% for price in prices %}
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            <img src="{{ price.service.image.url }}" class="card-img-top">
+
+            <div class="card-body">
+              <h5>{{ price.service.name }}</h5>
+              <h6>₹ {{ price.amount }}</h6>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>No price details found.</p>
+      {% endfor %}
+</div>
+
+    </div>
+  </div>
+</section>
+
+{% include 'layout/partials/customer/footer.html' %}
