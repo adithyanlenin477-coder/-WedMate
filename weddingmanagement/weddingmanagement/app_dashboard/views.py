@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate,login
 from app_dashboard.models import Customer, Vendor, VendorService
 from app_core.models import Category
 from weddingmanagement.users.models import User
+from django.core.mail import send_mail
 
 # Create your views here.
 def appdash(request):
@@ -52,6 +53,7 @@ def reg_view(request):
         u.email=email
         u.role="vendors"
         u.save()
+        send_mail(subject="Registration successfull",message=f"Welcome{name}",from_email=None,recipient_list=[email])
 
         c=Vendor()
         c.location=loc

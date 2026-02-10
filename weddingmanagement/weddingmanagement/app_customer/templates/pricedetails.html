@@ -13,28 +13,41 @@
       </div>
 
       <div class="card mb-4">
-  <div class="card-body text-center">
-    <h3 class="mb-0">{{ service.name }}</h3>
-  </div>
-</div>
+        <div class="card-body text-center">
+          <h3 class="mb-0">{{ service.name }}</h3>
+        </div>
+      </div>
 
       <!-- RIGHT SIDE : SERVICE PRICE & IMAGE -->
       <div class="row">
-      {% for price in prices %}
+        {% for price in prices %}
         <div class="col-md-4 mb-4">
           <div class="card">
-            <img src="{{ price.service.image.url }}" class="card-img-top">
+            {% if price.image %}
+            <img src="/media/{{ price.image }}" class="card-img-top">
+            {% endif %}
 
-            <div class="card-body">
+            <div class="card-body text-center">
               <h5>{{ price.service.name }}</h5>
               <h6>₹ {{ price.amount }}</h6>
+
+              <!-- View Bookings button -->
+              <form method="POST" action="{% url 'app_customer:price' price.id cid %}">
+                {% csrf_token %}
+                <input type="hidden" name="service" id="" value="{{price.id}}">
+                <input type="hidden" name="event" id=""  value="{{cid}}">
+
+                <button type="submit" class="btn btn-primary">Book Now</button>
+              </form>
             </div>
+
           </div>
         </div>
-      {% empty %}
+
+        {% empty %}
         <p>No price details found.</p>
-      {% endfor %}
-</div>
+        {% endfor %}
+      </div>
 
     </div>
   </div>

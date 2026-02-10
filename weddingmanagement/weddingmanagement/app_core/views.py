@@ -1,8 +1,9 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from app_core.models import Category, District, Eventtype, Location
 from app_dashboard.models import Customer, Vendor
+from app_customer.models import Payment
 
 # Create your views here.
 def district(request):
@@ -170,3 +171,17 @@ def vendorview(request):
 def custv(request):
        Cust=Customer.objects.all()
        return render(request,'customertable.html',{'cust':Cust})    
+
+def admin_payment_list(request):
+    payments = (
+        Payment.objects
+        .select_related('booking', 'booking__customer')
+        .prefetch_related(
+            'booking__details__service__vendor',
+            'booking__details__service__service',
+            'booking__details__event'
+        )
+        .order_by('-payment_date')
+    )
+
+    return render(request, 'admin_paymentview.html', {'payments': payments})

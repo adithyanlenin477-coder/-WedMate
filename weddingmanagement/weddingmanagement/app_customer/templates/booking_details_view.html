@@ -1,0 +1,93 @@
+{% load static %}
+{% include 'layout/partials/customer/header.html' %}
+
+<head>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="{% static 'customer/view/css/style.css' %}">
+
+</head>
+
+<body>
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section">Table #02</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="">
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Sl No</th>
+                                    <th>Service</th>
+                                    <th>Event</th>
+                                    <th>Amount</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in list %}
+                                <tr class="alert" role="alert">
+                                    <th scope="row">{{forloop.counter}}</th>
+                                    <td>{{i.service.service.name}}</td>
+                                    <td>{{i.event.name}}</td>
+                                    <td>{{i.service.amount}}</td>
+                                    <td>
+                                        <a href="{% url 'app_customer:booking_delete' i.id %}" class="close">
+                                            <span aria-hidden="true"><i class="fa fa-close"></i></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="">
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr class="d-flex justify-content-end">
+                                    <th></th>
+                                    <th>Grand Total : </th>
+                                    <th>₹ {{total}}</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="col-md-12">
+                    <div class="d-flex justify-content-end g-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                        <a href="{% url 'app_customer:servicev' %}"><button class="btn btn-dark">Continue</button></a>
+
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{% url 'app_customer:booking' %}">
+                        <button class="btn btn-warning text-white">Finish</button>
+                                </a>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <script src="{% static 'customer/view/js/jquery.min.js' %}"></script>
+    <script src="{% static 'customer/view/js/popper.js' %}"></script>
+    <script src="{% static 'customer/view/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'customer/view/js/main.js' %}"></script>
+
+</body>
+{% include 'layout/partials/customer/footer.html' %}

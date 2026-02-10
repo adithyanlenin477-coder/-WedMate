@@ -16,7 +16,7 @@
           {% for i in cat %}
           <div class="item">
             <!-- PASS SERVICE ID CORRECTLY -->
-            <a href="{% url 'app_customer:price' i.id %}">
+            <a href="{% url 'app_customer:price' i.id cid %}">
               <img src="/media/{{ i.image }}" alt="{{ i.name }}" style="height: 200px;">
             </a>
 

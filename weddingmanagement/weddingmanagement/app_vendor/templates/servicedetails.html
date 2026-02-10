@@ -3,16 +3,16 @@
 <div class="contact-form section-padding30 fix">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-xl-5 col-lg-5">
+            <div class="col-xl-8 col-lg-8">
                 <div class="form-wrapper">
-                    <form id="contact-form" action="{% url 'app_vendor:sdetails' %}" method="POST">
+                    <form id="contact-form" action="{% url 'app_vendor:sdetails' %}" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <!-- section tittle -->
                         <div class="row ">
                             <div class="col-lg-12">
                                 <div class="section-tittle tittle-form text-center mb-30">
                                     <h2>SERVICE DETAILS</h2>
-                                    <!-- <img src="{% static 'guest/assets/img/gallery/tittle_img2.png' %}" alt=""> -->
+                                    <img src="{% static 'guest/assets/img/gallery/tittle_img2.png' %}" alt="">
                                 </div>
                             </div>
                         </div>
@@ -21,10 +21,19 @@
                                 <div class="form-box mb-30">
                                     {% for i in service %}
                                     <label for="">{{i.service.name}}</label>
-                                    <input type="hidden" name="service_id[]" value="{{ i.id }}">
-                                    <input type="text" name="amount[]" placeholder="Amount">
-                                    <input type="file" name="image" class="form-control" id="exampleInputImage"> 
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="hidden" name="service_id[]" value="{{ i.id }}">
+                                            <input type="text" name="amount[]" placeholder="Amount">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="file" name="image[]" class="form-control" id="exampleInputImage">
+                                        </div>
+                                    </div>
+
+
                                     {% endfor %}
+
                                 </div>
                             </div>
                             <div class="col-lg-12">

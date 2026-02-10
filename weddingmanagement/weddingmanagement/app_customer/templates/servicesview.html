@@ -12,7 +12,7 @@
           <div class="owl-courses-item owl-carousel">
             {% for i in evnt %}
             <div class="item">
-               <a href="{% url 'app_customer:categoryv' %}">
+               <a href="{% url 'app_customer:categoryv' i.id %}">
               <img src="/media/{{i.image}}" alt="Course One" style="height: 200px;">
               <div class="down-content" style="height:75px">
                 <h4>{{i.name}}</h4></a>

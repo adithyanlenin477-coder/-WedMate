@@ -1,0 +1,67 @@
+{% load static %}
+{% include 'layout/partials/customer/header.html' %}
+
+<section class="upcoming-meetings">
+  <div class="container">
+    <div class="row justify-content-center">
+
+      <div class="col-md-6">
+        <div class="card shadow">
+          <div class="card-body">
+
+            <h3 class="text-center mb-3">Book Service</h3>
+
+          
+            <form method="POST">
+              {% csrf_token %}
+
+              
+              <div class="mb-3">
+                <label class="form-label">Grand Total</label>
+                <input type="text" name="grandtotal" class="form-control" value="{{grandtotal}}" readonly>
+              </div>
+
+              <!-- Event Date -->
+              <div class="mb-3">
+                <label class="form-label">Event Date</label>
+                <input type="date" name="event_date" class="form-control" required>
+              </div>
+
+              <!-- Venue -->
+              <div class="mb-3">
+                <label class="form-label">Venue</label>
+                <input type="text" name="venue" class="form-control" required>
+              </div>
+
+              <!-- Number of Participants -->
+              <div class="mb-3">
+                <label class="form-label">Number of Participants</label>
+                <input type="number" name="number_of_participants" class="form-control" min="1" required>
+              </div>
+
+              <!-- Time -->
+              <div class="mb-3">
+                <label class="form-label">Event Time</label>
+                <input type="time" name="time" class="form-control" required>
+              </div>
+
+              <!-- Note -->
+              <div class="mb-3">
+                <label class="form-label">Note (optional)</label>
+                <textarea name="note" class="form-control" rows="3"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">
+                Confirm Booking
+              </button>
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% include 'layout/partials/customer/footer.html' %}

@@ -9,5 +9,6 @@ path("stafftable/",views.staffv,name='stafftable'),
 path("sdetails/",views.servicedetails,name='sdetails'),
 path('gallery/', views.gallery, name='gallery'),
 path('gallerytable/', views.gallery_table, name='gallery_table'),
+path('payments/', views.vendor_payment_list, name='vendor_payments'),
     
 ]

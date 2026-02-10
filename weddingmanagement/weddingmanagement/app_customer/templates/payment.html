@@ -1,0 +1,63 @@
+{% load static %}
+{% include 'layout/partials/customer/header.html' %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+
+            <div class="card shadow">
+                <div class="card-body">
+
+                    <h4 class="text-center mb-4">Advance Payment (40%)</h4>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- 🔥 HIDDEN SERVICE IDS (MOST IMPORTANT FIX) -->
+                        {% for s in selected_services %}
+                            <input type="hidden" name="service_id[]" value="{{ s.id }}">
+                        {% endfor %}
+
+                        <!-- Booking ID -->
+                        <div class="mb-3">
+                            <label class="form-label">Booking ID</label>
+                            <input type="text" class="form-control"
+                                   value="{{ booking.id }}" readonly>
+                        </div>
+
+                        <!-- Payment Date -->
+                        <div class="mb-3">
+                            <label class="form-label">Payment Date</label>
+                            <input type="text" class="form-control"
+                                   value="{% now 'Y-m-d' %}" readonly>
+                        </div>
+
+                        <!-- Total Amount -->
+                        <div class="mb-3">
+                            <label class="form-label">Total Amount</label>
+                            <input type="text" class="form-control"
+                                   value="₹ {{ total }}" readonly>
+                        </div>
+
+                        <!-- Advance Amount -->
+                        <div class="mb-3">
+                            <label class="form-label">Payable Amount (40%)</label>
+                            <input type="text"
+                                   class="form-control text-success"
+                                   value="₹ {{ advance }}" readonly>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">
+                            Pay ₹ {{ advance }}
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% include 'layout/partials/customer/footer.html' %}

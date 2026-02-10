@@ -6,7 +6,7 @@ from app_vendor.models import  Staff
 
 from app_dashboard.models import Vendor, VendorService
 from app_core.models import Category
-from app_customer.models import Gallery
+from app_customer.models import Booking_details, Gallery, Payment
 from weddingmanagement.users.models import User
 
 # Create your views here.
@@ -47,12 +47,20 @@ def servicedetails(request):
     if request.method=="POST":
         service_ids = request.POST.getlist("service_id[]")
         amounts = request.POST.getlist("amount[]")
+        images = request.FILES.getlist("image[]")
 
-        for sid, amt in zip(service_ids, amounts):
-            ven=VendorService.objects.get(id=sid)
-            ven.amount=amt
-            img=request.FILES.get('img')
-            ven.image=img
+
+        for idx, sid in enumerate(service_ids):
+            ven = VendorService.objects.get(id=sid)
+
+            # amount
+            if idx < len(amounts):
+                ven.amount = amounts[idx]
+
+            # image
+            if idx < len(images):
+                ven.image = images[idx]
+
             ven.save()
     service=VendorService.objects.filter(vendor=request.user)
     return render(request, "servicedetails.html",{"service":service})   
@@ -80,3 +88,29 @@ def gallery_table(request):
     galleries = Gallery.objects.select_related('vendor', 'service').all()
     return render(request, 'gallerytable.html', {'galleries': galleries})
 
+def vendor_payment_list(request):
+    vendor = request.user
+
+    # Fetch payments that include at least one service of this vendor
+    payments = (
+        Payment.objects
+        .select_related('booking', 'booking__customer')  # Payment -> Booking -> Customer
+        .prefetch_related(
+            'booking__details__service__service',   # Booking_details -> VendorService -> Category
+            'booking__details__event'               # Booking_details -> Eventtype
+        )
+        .filter(
+            booking__details__service__vendor=vendor
+        )
+        .distinct()
+        .order_by('-payment_date')
+    )
+
+    # Annotate each payment with only the vendor's services
+    for payment in payments:
+        payment.vendor_services = [
+            bd for bd in payment.booking.details.all()  # Booking_details
+            if bd.service.vendor == vendor
+        ]
+
+    return render(request, 'paymentview.html', {'payments': payments})
