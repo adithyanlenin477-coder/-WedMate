@@ -1,7 +1,7 @@
 
 from decimal import Decimal
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from app_vendor.models import  Staff
 
@@ -88,6 +88,46 @@ def gallery(request):
 def gallery_table(request):
     galleries = Gallery.objects.select_related('vendor', 'service').all()
     return render(request, 'gallerytable.html', {'galleries': galleries})
+
+def gallery_edit(request, id):
+    gallery = get_object_or_404(Gallery, id=id)
+    services = Category.objects.all()
+
+    if request.method == "POST":
+        service_id = request.POST.get("service")
+
+        if service_id:
+            gallery.service_id = service_id
+
+        if request.FILES.get("image"):
+            if gallery.image:
+                gallery.image.delete(save=False)
+
+            gallery.image = request.FILES.get("image")
+
+        gallery.save()
+        return redirect('app_vendor:gallery_table')   # ✅ corrected name
+
+    return render(request, 'gallery_edit.html', {
+        'gallery': gallery,
+        'services': services
+    })
+    
+def gallery_delete(request, id):
+    d = Gallery.objects.get(id=id)
+
+    if d.image:
+        d.image.delete(save=False)
+        
+
+    d.delete()
+
+    galleries = Gallery.objects.select_related('vendor', 'service').all()
+
+    return render(request, 'gallerytable.html', {
+        'galleries': galleries,
+        'msg': 'Deleted Successfully'
+    })
 
 def vendor_payment_list(request):
     vendor = request.user

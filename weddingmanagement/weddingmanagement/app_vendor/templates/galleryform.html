@@ -1,52 +1,230 @@
 {% load static %}
 {% include "layout/partials/guest/header.html" %}
-<div class="contact-form section-padding30 fix">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-5 col-lg-5">
-                <div class="form-wrapper">
-                    <form id="contact-form" action="{% url 'app_vendor:gallery' %}" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <!-- section tittle -->
-                        <div class="row ">
-                            <div class="col-lg-12">
-                                <div class="section-tittle tittle-form text-center mb-30">
-                                    <h2>SERVICE REGISTRATION</h2>
-                                    <img src="{% static 'guest/assets/img/gallery/tittle_img2.png' %}" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-box subject-icon mb-30">
-                           <label for="">Services</label><br>
-                           <select name="service_id" id=""class="form-control">
-                            <option value="">Choose </option>
-                                {% for i in services %}
-                                <option value="{{i.service.id}}">{{i.service.name}}</option>
-                                {% endfor %}
-                           </select>
-                            
-                        </div>
-                        <div class="form-box mb-35">
-                            <label class="">Upload Image</label>
-                            <input type="file" name="image" class="form-control">
-                        </div>
 
-                        <div class="submit-info">
-                            <button class="btn" type="submit">Register</button>
-                        </div>
-                    </form>
-                    <!-- Shape inner Flower -->
-                    <div class="shape-inner-flower">
-                        <img src="{% static 'guest/assets/img/gallery/shape2.png' %}" class="shpe2" alt="">
-                    </div>
-                    <!-- Shape outer Flower -->
-                    <div class="shape-outer-flower">
-                        <img src="{% static 'guest/assets/img/flower/from-top.png' %}" class="outer-top" alt="">
-                        <img src="{% static 'guest/assets/img/flower/from-bottom.png' %}" class="outer-bottom" alt="">
-                    </div>
-                </div>
+<!-- Professional Wedding Gallery Background -->
+<div class="wedding-bg">
+
+    <div class="wedding-card">
+
+        <form action="{% url 'app_vendor:gallery' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Header -->
+            <div class="form-header">
+                <h2>Wedding Gallery</h2>
+                <p>Capture & showcase your memorable moments</p>
             </div>
-        </div>
+
+            <!-- Service Select -->
+            <div class="input-group">
+                <label>Select Service</label>
+                <select name="service_id" required>
+                    <option value="">Select Service</option>
+                    {% for i in services %}
+                        <option value="{{ i.service.id }}">{{ i.service.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="upload-box" id="uploadBox">
+                <input type="file" name="image" id="imageUpload" required onchange="previewImage(event)">
+                <label for="imageUpload">📷 Click or Drag Your Image</label>
+                <img id="preview" />
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">Upload Now</button>
+        </form>
+
     </div>
+
 </div>
+
+<style>
+/* BODY & BACKGROUND */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: url("{% static 'images/wedding-professional-bg.jpg' %}") no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+}
+
+/* WRAPPER */
+.wedding-bg {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* GLASS CARD */
+.wedding-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 45px 35px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    transition: 0.3s ease;
+}
+
+.wedding-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+/* FORM HEADER */
+.form-header h2 {
+    text-align: center;
+    color: #b35c7e;
+    font-weight: 700;
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.form-header p {
+    text-align: center;
+    color: #8b5e7e;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+/* INPUTS */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #8b5e7e;
+    font-weight: 500;
+}
+
+.input-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #d9b8c7;
+    background: #fffafc;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group select:focus {
+    border-color: #b35c7e;
+    box-shadow: 0 0 10px rgba(179,92,126,0.2);
+}
+
+/* UPLOAD BOX */
+.upload-box {
+    border: 2px dashed #d9b8c7;
+    border-radius: 18px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 25px;
+    transition: 0.3s;
+}
+
+.upload-box:hover {
+    background: #fff5f8;
+    border-color: #b35c7e;
+}
+
+.upload-box input {
+    display: none;
+}
+
+.upload-box label {
+    font-size: 14px;
+    color: #b35c7e;
+    font-weight: 500;
+}
+
+#preview {
+    margin-top: 15px;
+    width: 100%;
+    max-height: 200px;
+    border-radius: 12px;
+    display: none;
+    object-fit: cover;
+    box-shadow: 0 5px 15px rgba(179,92,126,0.2);
+}
+
+/* SUBMIT BUTTON */
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 25px;
+    border: none;
+    font-weight: 600;
+    font-size: 15px;
+    color: #fff;
+    background: linear-gradient(90deg, #b35c7e, #8b5e7e);
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(179,92,126,0.2);
+}
+
+.submit-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 25px rgba(179,92,126,0.3);
+}
+
+/* DRAG & DROP EFFECT */
+#uploadBox.dragover {
+    background: #fff0f5;
+    border-color: #b35c7e;
+}
+
+/* RESPONSIVE */
+@media(max-width: 576px) {
+    .wedding-card {
+        padding: 35px 20px;
+    }
+    .form-header h2 {
+        font-size: 24px;
+    }
+    .form-header p {
+        font-size: 13px;
+    }
+}
+</style>
+
+<script>
+// IMAGE PREVIEW
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function(){
+        const output = document.getElementById('preview');
+        output.src = reader.result;
+        output.style.display = "block";
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+// DRAG & DROP EFFECT
+const uploadBox = document.getElementById('uploadBox');
+uploadBox.addEventListener('dragover', e => {
+    e.preventDefault();
+    uploadBox.classList.add('dragover');
+});
+uploadBox.addEventListener('dragleave', e => {
+    e.preventDefault();
+    uploadBox.classList.remove('dragover');
+});
+uploadBox.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadBox.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    document.getElementById('imageUpload').files = files;
+    previewImage({target: {files: files}});
+});
+</script>
+
 {% include "layout/partials/guest/footer.html" %}

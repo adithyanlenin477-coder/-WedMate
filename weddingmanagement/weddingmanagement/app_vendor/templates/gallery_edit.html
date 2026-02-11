@@ -1,0 +1,73 @@
+{% load static %}
+{% include 'layout/partials/guest/header.html' %}
+
+<div class="container mt-5">
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Edit Gallery</h5>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Service Dropdown -->
+                <div class="mb-3">
+                    <label class="form-label">Service</label>
+
+                    <select name="service" class="form-control" required>
+                        <option value="">-- Select Service --</option>
+
+                        {% for s in services %}
+                        <option value="{{ s.id }}"
+                            {% if gallery.service and s.id == gallery.service.id %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ s.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Current Image -->
+                <div class="mb-3">
+                    <label class="form-label">Current Image</label><br>
+
+                    {% if gallery.image %}
+                        <img src="{{ gallery.image.url }}"
+                             class="img-thumbnail"
+                             style="max-width:150px;">
+                    {% else %}
+                        <p class="text-muted">No image uploaded</p>
+                    {% endif %}
+                </div>
+
+                <!-- Change Image -->
+                <div class="mb-3">
+                    <label class="form-label">Change Image</label>
+                    <input type="file" name="image" class="form-control">
+                </div>
+
+                <!-- Buttons -->
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success">
+                        Update
+                    </button>
+
+                    <!-- IMPORTANT: Use Namespace -->
+                    <a href="{% url 'app_vendor:gallery_table' %}" 
+                       class="btn btn-secondary">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% include 'layout/partials/guest/footer.html' %}

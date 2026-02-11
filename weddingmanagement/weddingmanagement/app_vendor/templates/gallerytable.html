@@ -1,42 +1,186 @@
 {% load static %}
 {% include 'layout/partials/guest/header.html' %}
 
-<div class="container-fluid mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white">
-            <h5 class="mb-0">Gallery</h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle text-center">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Vendor</th>
-                            <th scope="col">Service</th>
-                            <th scope="col">Image</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for g in galleries %}
-                        <tr>
-                            <th scope="row">{{ forloop.counter }}</th>
-                            <td>{{ g.vendor.username }}</td>
-                            <td>{{ g.service.name }}</td>
-                            <td>
-                                <img src="/media/{{ g.image }}" alt="Gallery Image" class="img-thumbnail" style="max-width: 150px;">
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="4" class="text-center">No images uploaded yet.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+<div class="luxury-wrapper">
+
+    <!-- Elegant Heading -->
+    <div class="container text-center py-5">
+        <h1 class="elegant-title">Our Beautiful Moments</h1>
+        <p class="subtitle">Capturing love, light & timeless memories</p>
+    </div>
+
+    <div class="container pb-5">
+        <div class="row g-4">
+
+            {% for g in galleries %}
+            <div class="col-md-6 col-lg-4">
+
+                <div class="elegant-card">
+
+                    <!-- Image -->
+                    <div class="image-box">
+                        <img src="{{ g.image.url }}" class="elegant-img">
+
+                        <!-- Soft Overlay -->
+                        <div class="soft-overlay">
+                            <div class="overlay-content">
+                                <a href="{% url 'app_vendor:gallery_edit' g.id %}"
+                                   class="overlay-btn edit-btn">
+                                    Edit
+                                </a>
+
+                                <a href="{% url 'app_vendor:gallery_delete' g.id %}"
+                                   onclick="return confirm('Delete this image?');"
+                                   class="overlay-btn delete-btn">
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="card-content text-center">
+                        <h5 class="vendor-name">
+                            {{ g.vendor.username }}
+                        </h5>
+
+                        <span class="service-tag">
+                            {{ g.service.name }}
+                        </span>
+                    </div>
+
+                </div>
+
             </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <h4 class="text-muted">No Gallery Images Available</h4>
+                <p class="text-muted">Upload beautiful memories to display here ✨</p>
+            </div>
+            {% endfor %}
+
         </div>
     </div>
+
 </div>
+
+
+<style>
+
+/* ===== Soft Background ===== */
+.luxury-wrapper {
+    background: linear-gradient(to right, #fdfbfb, #ebedee);
+    min-height: 100vh;
+}
+
+/* ===== Elegant Title ===== */
+.elegant-title {
+    font-size: 2.7rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #2c2c2c;
+}
+
+.subtitle {
+    color: #888;
+    font-style: italic;
+}
+
+/* ===== Card ===== */
+.elegant-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    transition: all 0.4s ease;
+}
+
+.elegant-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+}
+
+/* ===== Image ===== */
+.image-box {
+    position: relative;
+    overflow: hidden;
+}
+
+.elegant-img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    transition: 0.6s ease;
+}
+
+.elegant-card:hover .elegant-img {
+    transform: scale(1.08);
+}
+
+/* ===== Soft Overlay ===== */
+.soft-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: 0.4s ease;
+}
+
+.elegant-card:hover .soft-overlay {
+    opacity: 1;
+}
+
+.overlay-content {
+    display: flex;
+    gap: 12px;
+}
+
+/* ===== Buttons ===== */
+.overlay-btn {
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.edit-btn {
+    background: #6a11cb;
+    color: white;
+}
+
+.delete-btn {
+    background: #ff4b2b;
+    color: white;
+}
+
+.overlay-btn:hover {
+    transform: scale(1.1);
+}
+
+/* ===== Content ===== */
+.card-content {
+    padding: 20px;
+}
+
+.vendor-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.service-tag {
+    background: #f1f1f1;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #555;
+}
+
+</style>
 
 {% include 'layout/partials/guest/footer.html' %}
