@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
@@ -173,15 +174,30 @@ def custv(request):
        return render(request,'customertable.html',{'cust':Cust})    
 
 def admin_payment_list(request):
+
     payments = (
         Payment.objects
         .select_related('booking', 'booking__customer')
-        .prefetch_related(
-            'booking__details__service__vendor',
-            'booking__details__service__service',
-            'booking__details__event'
-        )
+        .prefetch_related('booking__details__service')
         .order_by('-payment_date')
     )
 
-    return render(request, 'admin_paymentview.html', {'payments': payments})
+    rows = []
+    total_admin_earning = Decimal('0.00')
+
+    for payment in payments:
+
+        # Admin gets 20% of advance (40%)
+        admin_commission = payment.amount * Decimal('0.20')
+
+        total_admin_earning += admin_commission
+
+        rows.append({
+            'payment': payment,
+            'admin_commission': admin_commission
+        })
+
+    return render(request, 'admin_paymentview.html', {
+        'rows': rows,
+        'total_admin_earning': total_admin_earning
+    })

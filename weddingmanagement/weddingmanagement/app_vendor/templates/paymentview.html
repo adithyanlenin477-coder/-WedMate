@@ -1,51 +1,200 @@
 {% load static %}
-{% include 'layout/partials/guest/header.html' %}
+{% include 'layout/partials/vendor/header.html' %}
 
-<div class="container-fluid mt-4">  {# use container-fluid #}
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped w-100">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Customer</th>
-                    <th>Booked Services</th>
-                    <th>Amount</th>
-                    <th>Booking Time</th>
-                    <th>Number of Participants</th>
-                    <th>Venue</th>
-                    <th>Payment Date</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for payment in payments %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ payment.booking.customer.username }}</td>
+<style>
+    .summary-card {
+        border: none;
+        border-radius: 12px;
+        transition: 0.3s ease;
+    }
 
-                    <td>
-                        {% if payment.vendor_services %}
-                            {% for s in payment.vendor_services %}
-                                {{ s.service.service.name }} - {{ s.event.name }}<br>
-                            {% endfor %}
-                        {% else %}
-                            No services
-                        {% endif %}
-                    </td>
+    .summary-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    }
 
-                    <td>₹ {{ payment.amount }}</td>
-                    <td>{{ payment.booking.time|time:"h:i A" }}</td>
-                    <td>{{ payment.booking.number_of_participants }}</td>
-                    <td>{{ payment.booking.venue }}</td>
-                    <td>{{ payment.payment_date|date:"M d, Y, h:i A" }}</td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="8" class="text-center">No payments found</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    .summary-title {
+        font-size: 14px;
+        color: #6c757d;
+        letter-spacing: 0.5px;
+    }
+
+    .summary-value {
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    table th {
+        font-size: 14px;
+        padding: 16px !important;
+        white-space: nowrap;
+    }
+
+    table td {
+        padding: 18px !important;
+        vertical-align: middle;
+        font-size: 14px;
+    }
+
+    .currency {
+        font-weight: 600;
+    }
+</style>
+
+<div class="container-fluid mt-4">
+
+    <div class="mb-4">
+        <h3 class="fw-bold">Vendor Payment Dashboard</h3>
+        <p class="text-muted">Overview of your received advances and commission details</p>
     </div>
+
+    <!-- SUMMARY CARDS -->
+    <div class="row mb-4">
+
+        <div class="col-md-3">
+            <div class="card summary-card shadow-sm">
+                <div class="card-body text-center">
+                    <div class="summary-title">Total Service Amount</div>
+                    <div class="summary-value text-primary">
+                        ₹ {{ total_service_amount|floatformat:2 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card summary-card shadow-sm">
+                <div class="card-body text-center">
+                    <div class="summary-title">Advance Received (40%)</div>
+                    <div class="summary-value text-success">
+                        ₹ {{ total_advance|floatformat:2 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card summary-card shadow-sm">
+                <div class="card-body text-center">
+                    <div class="summary-title">Admin Commission (20%)</div>
+                    <div class="summary-value text-danger">
+                        ₹ {{ total_admin_share|floatformat:2 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card summary-card shadow-sm">
+                <div class="card-body text-center">
+                    <div class="summary-title">Net Amount to You</div>
+                    <div class="summary-value text-dark">
+                        ₹ {{ total_vendor_net|floatformat:2 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PAYMENT TABLE -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            {% if vendor_rows %}
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th>SL No</th>
+                            <th>Customer</th>
+                            <th>Services</th>
+                            <th>Event Date</th>
+                            <th>Event Time</th>
+                            <th>Venue</th>
+                            <th>Service Total</th>
+                            <th>Advance (40%)</th>
+                            <th>Admin 20%</th>
+                            <th>Your Net</th>
+                            <th>Payment Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for row in vendor_rows %}
+                        <tr>
+
+                            <td class="text-center">{{ forloop.counter }}</td>
+
+                            <td>
+                                <strong>
+                                    {{ row.payment.booking.customer.username }}
+                                </strong>
+                            </td>
+
+                            <td>
+                                {% for service in row.services %}
+                                    <div>
+                                        {{ service.service.service.name }}
+                                        <span class="text-muted">
+                                            (₹ {{ service.service.amount|floatformat:2 }})
+                                        </span>
+                                    </div>
+                                {% endfor %}
+                            </td>
+
+                            <!-- ✅ Event Date -->
+                            <td class="text-center">
+                                {{ row.payment.booking.event_date|date:"d M Y" }}
+                            </td>
+
+                            <!-- ✅ Event Time -->
+                            <td class="text-center">
+                                {{ row.payment.booking.time|time:"h:i A" }}
+                            </td>
+
+                            <!-- ✅ Venue -->
+                            <td>
+                                {{ row.payment.booking.venue }}
+                            </td>
+
+                            <td class="currency text-primary">
+                                ₹ {{ row.service_total|floatformat:2 }}
+                            </td>
+
+                            <td class="currency text-success">
+                                ₹ {{ row.advance_amount|floatformat:2 }}
+                            </td>
+
+                            <td class="currency text-danger">
+                                ₹ {{ row.admin_share|floatformat:2 }}
+                            </td>
+
+                            <td class="currency text-dark">
+                                ₹ {{ row.vendor_net|floatformat:2 }}
+                            </td>
+
+                            <td class="text-muted">
+                                {{ row.payment.payment_date|date:"d M Y, h:i A" }}
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+            {% else %}
+                <div class="alert alert-info text-center">
+                    No payment records available.
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
 </div>
 
-{% include 'layout/partials/guest/footer.html' %}
+{% include 'layout/partials/vendor/footer.html' %}

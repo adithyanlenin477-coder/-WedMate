@@ -1,75 +1,156 @@
 {% load static %}
 {% include 'layout/partials/admin/header.html' %}
 
-<div class="container-fluid mt-4">
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped w-100">
-            <thead class="table-dark">
+<style>
+    body {
+        background-color: #1f2933;
+        color: #e4e7eb;
+    }
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .page-subtitle {
+        font-size: 14px;
+        color: #9aa5b1;
+    }
+
+    .revenue-box {
+        background: #323f4b;
+        border-radius: 8px;
+        padding: 25px;
+        border-left: 4px solid #00c853;
+    }
+
+    .revenue-label {
+        font-size: 13px;
+        color: #9aa5b1;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .revenue-value {
+        font-size: 30px;
+        font-weight: 700;
+        margin-top: 8px;
+        color: #00e676;
+    }
+
+    .table-dark-custom {
+        background: #27303f;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .table-dark-custom thead {
+        background-color: #111827;
+        color: #ffffff;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .table-dark-custom th {
+        padding: 18px !important;
+    }
+
+    .table-dark-custom td {
+        padding: 18px !important;
+        vertical-align: middle;
+        border-top: 1px solid #3e4c59;
+    }
+
+    .commission {
+        color: #00e676;
+        font-weight: 600;
+    }
+
+</style>
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+    <div class="mb-4">
+        <div class="page-title">Admin Commission Report</div>
+        <div class="page-subtitle">
+            20% commission earned from vendor advance payments
+        </div>
+    </div>
+
+    <!-- TOTAL REVENUE -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="revenue-box">
+                <div class="revenue-label">Total Admin Earnings</div>
+                <div class="revenue-value">
+                    ₹ {{ total_admin_earning|floatformat:2 }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-responsive table-dark-custom">
+        <table class="table table-borderless mb-0">
+
+            <thead>
                 <tr>
                     <th>#</th>
                     <th>Customer</th>
-                    <th>Vendor</th>
-                    <th>Service</th>
-                    <th>Event Type</th>
                     <th>Event Date</th>
-                    <th>Event Time</th>
-                    <th>Amount</th>
-                    <th>Participants</th>
                     <th>Venue</th>
+                    <th>Advance Paid (40%)</th>
+                    <th>Admin Commission (20%)</th>
                     <th>Payment Date</th>
                 </tr>
             </thead>
 
             <tbody>
-            {% for payment in payments %}
+                {% for row in rows %}
                 <tr>
+
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ payment.booking.customer.username }}</td>
 
-                    <!-- Vendors -->
                     <td>
-                        {% for d in payment.booking.details.all %}
-                            {{ d.service.vendor.username }}<br>
-                        {% endfor %}
+                        {{ row.payment.booking.customer.username }}
                     </td>
 
-                    <!-- Services -->
                     <td>
-                        {% for d in payment.booking.details.all %}
-                            {{ d.service.service.name }}<br>
-                        {% endfor %}
+                        {{ row.payment.booking.event_date|date:"d M Y" }}
                     </td>
 
-                    <!-- Event Types -->
                     <td>
-                        {% for d in payment.booking.details.all %}
-                            {{ d.event.name }}<br>
-                        {% endfor %}
+                        {{ row.payment.booking.venue }}
                     </td>
 
-                    <!-- Event Date -->
                     <td>
-                        {{ payment.booking.event_date|date:"M d, Y" }}
+                        ₹ {{ row.payment.amount|floatformat:2 }}
                     </td>
 
-                    <!-- Event Time -->
-                    <td>
-                        {{ payment.booking.time|time:"h:i A" }}
+                    <td class="commission">
+                        ₹ {{ row.admin_commission|floatformat:2 }}
                     </td>
 
-                    <td>₹ {{ payment.amount }}</td>
-                    <td>{{ payment.booking.number_of_participants }}</td>
-                    <td>{{ payment.booking.venue }}</td>
-                    <td>{{ payment.payment_date|date:"M d, Y, h:i A" }}</td>
+                    <td>
+                        {{ row.payment.payment_date|date:"d M Y, h:i A" }}
+                    </td>
+
                 </tr>
-            {% empty %}
+                {% empty %}
                 <tr>
-                    <td colspan="11" class="text-center">No payments found</td>
+                    <td colspan="7" class="text-center py-4 text-muted">
+                        No commission records found
+                    </td>
                 </tr>
-            {% endfor %}
+                {% endfor %}
             </tbody>
+
         </table>
     </div>
+
 </div>
 
 {% include 'layout/partials/admin/footer.html' %}

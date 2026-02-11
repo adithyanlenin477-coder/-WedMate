@@ -1,4 +1,5 @@
 
+from decimal import Decimal
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -91,26 +92,65 @@ def gallery_table(request):
 def vendor_payment_list(request):
     vendor = request.user
 
-    # Fetch payments that include at least one service of this vendor
     payments = (
         Payment.objects
-        .select_related('booking', 'booking__customer')  # Payment -> Booking -> Customer
-        .prefetch_related(
-            'booking__details__service__service',   # Booking_details -> VendorService -> Category
-            'booking__details__event'               # Booking_details -> Eventtype
-        )
-        .filter(
-            booking__details__service__vendor=vendor
-        )
-        .distinct()
+        .select_related('booking', 'booking__customer')
+        .prefetch_related('booking__details__service')
         .order_by('-payment_date')
     )
 
-    # Annotate each payment with only the vendor's services
-    for payment in payments:
-        payment.vendor_services = [
-            bd for bd in payment.booking.details.all()  # Booking_details
-            if bd.service.vendor == vendor
-        ]
+    vendor_rows = []
 
-    return render(request, 'paymentview.html', {'payments': payments})
+    total_service_amount = Decimal('0.00')
+    total_advance = Decimal('0.00')
+    total_admin_share = Decimal('0.00')
+    total_vendor_net = Decimal('0.00')
+
+    for payment in payments:
+
+        # Get only this vendor's booked services
+        vendor_services = payment.booking.details.filter(
+            service__vendor=vendor
+        )
+
+        if not vendor_services.exists():
+            continue
+
+        # 40% advance paid
+        advance_amount = payment.amount
+
+        # Admin takes 20% of advance
+        admin_share = (advance_amount * Decimal('0.20')).quantize(Decimal('0.01'))
+
+        # Vendor gets remaining
+        vendor_net = (advance_amount - admin_share).quantize(Decimal('0.01'))
+
+        total_advance += advance_amount
+        total_admin_share += admin_share
+        total_vendor_net += vendor_net
+
+        # Calculate full service price total
+        service_total = Decimal('0.00')
+
+        for detail in vendor_services:
+            if detail.service.amount:
+                service_total += detail.service.amount
+
+        total_service_amount += service_total
+
+        vendor_rows.append({
+            'payment': payment,
+            'services': vendor_services,
+            'service_total': service_total,
+            'advance_amount': advance_amount,
+            'admin_share': admin_share,
+            'vendor_net': vendor_net,
+        })
+
+    return render(request, 'paymentview.html', {
+        'vendor_rows': vendor_rows,
+        'total_service_amount': total_service_amount.quantize(Decimal('0.01')),
+        'total_advance': total_advance.quantize(Decimal('0.01')),
+        'total_admin_share': total_admin_share.quantize(Decimal('0.01')),
+        'total_vendor_net': total_vendor_net.quantize(Decimal('0.01')),
+    })
