@@ -1,83 +1,230 @@
-  {% load static %}
-  {% include "layout/partials/guest/header.html" %}
-  <div class="contact-form section-padding30 fix">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-xl-5 col-lg-5">
-                    <div class="form-wrapper">
-                        <form id="contact-form" action="{% url 'app_dashboard:registration' %}" method="POST">
-                            {% csrf_token %}
-                            <!-- section tittle -->
-                            <div class="row ">
-                                <div class="col-lg-12">
-                                    <div class="section-tittle tittle-form text-center mb-30">
-                                        <h2>VENDOR REGISTRATION</h2>
-                                        <img src="{% static 'guest/assets/img/gallery/tittle_img2.png' %}" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-box mb-30">
-                                        <input type="text" name="name" placeholder="Username">
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-box subject-icon mb-30">
-                                        <input type="password" name="password" placeholder="Password">
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-box subject-icon mb-30">
-                                        <input type="email" name="email" placeholder="Email">
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-box subject-icon mb-30">
-                                       <label for="">Services</label><br>
-                                {% for i in cat %}
-                                <input type="checkbox"  name="categories" value="{{i.id}}" style="height:15px !important;width:15px !important"> &nbsp;{{ i.name }}<br>
-                                {% endfor %}
-                                    </div>
-                                </div>
-                                <br><br>
-                                <div class="col-lg-12">
-                                    <div class="form-box subject-icon mb-30">
-                                        <input type="text" name="license" placeholder="License Number">
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-box subject-icon mb-30">
-                                        <input type="text" name="phone" placeholder="Phone Number">
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-box subject-icon mb-30">
-                                        <input type="text" name="location" placeholder="Location">
-                                    </div>
-                                </div>
-                                
-                               
-                                <div class="col-lg-12">
-                                
-                                <div class="submit-info">
-                                    <button class="btn" type="submit">Register</button>
-                                </div>
-                                </div>
-                            </div>
-                        </form>
-                        <!-- Shape inner Flower -->
-                        <div class="shape-inner-flower">
-                            <img src="{% static 'guest/assets/img/gallery/shape2.png' %}" class="shpe2" alt="">
-                        </div>
-                        <!-- Shape outer Flower -->
-                        <div class="shape-outer-flower">
-                            <img src="{% static 'guest/assets/img/flower/from-top.png' %}" class="outer-top" alt="">
-                            <img src="{% static 'guest/assets/img/flower/from-bottom.png' %}" class="outer-bottom" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
+{% load static %}
+{% include "layout/partials/guest/header.html" %}
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:#f4f1ee;
+}
+
+/* ===== SPLIT LAYOUT ===== */
+.vendor-section{
+    min-height:100vh;
+    display:flex;
+}
+
+/* Left Image Section */
+.vendor-left{
+    flex:1;
+    background:linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)),
+    url("{% static 'guest/assets/img/gallery/gallery2.jpg' %}");
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    padding:60px;
+}
+
+.vendor-left h1{
+    font-family:'Playfair Display',serif;
+    font-size:40px;
+    letter-spacing:2px;
+}
+
+.vendor-left p{
+    margin-top:20px;
+    font-size:15px;
+    opacity:0.9;
+}
+
+/* Right Form Section */
+.vendor-right{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:60px 40px;
+}
+
+/* Glass Card */
+.vendor-card{
+    width:100%;
+    max-width:520px;
+    background:rgba(255,255,255,0.9);
+    backdrop-filter:blur(10px);
+    padding:50px 45px;
+    border-radius:20px;
+    box-shadow:0 25px 60px rgba(0,0,0,0.08);
+    animation:fadeUp 0.8s ease;
+}
+
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(40px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+/* Title */
+.vendor-title{
+    font-family:'Playfair Display',serif;
+    font-size:28px;
+    text-align:center;
+    margin-bottom:35px;
+    color:#2d2d2d;
+    letter-spacing:1.5px;
+    position:relative;
+}
+
+.vendor-title::after{
+    content:"";
+    width:70px;
+    height:2px;
+    background:#b76e79;
+    display:block;
+    margin:12px auto 0;
+}
+
+/* Inputs */
+.input-group{
+    margin-bottom:18px;
+}
+
+.input-group input{
+    width:100%;
+    padding:14px 16px;
+    border-radius:10px;
+    border:1px solid #e5e5e5;
+    background:#fafafa;
+    transition:0.3s;
+}
+
+.input-group input:focus{
+    border-color:#b76e79;
+    background:#fff;
+    box-shadow:0 0 10px rgba(183,110,121,0.15);
+    outline:none;
+}
+
+/* Services Grid */
+.services-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.service-item{
+    border:1px solid #eee;
+    padding:10px 12px;
+    border-radius:8px;
+    background:#fafafa;
+    transition:0.3s;
+}
+
+.service-item:hover{
+    border-color:#b76e79;
+    background:#fff;
+}
+
+.service-item input{
+    accent-color:#b76e79;
+    margin-right:6px;
+}
+
+/* Button */
+.register-btn{
+    width:100%;
+    padding:14px;
+    border-radius:30px;
+    border:none;
+    background:linear-gradient(45deg,#b76e79,#d89ca5);
+    color:#fff;
+    font-weight:600;
+    letter-spacing:1px;
+    transition:0.3s;
+}
+
+.register-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 25px rgba(183,110,121,0.3);
+}
+
+/* Responsive */
+@media(max-width:992px){
+    .vendor-section{
+        flex-direction:column;
+    }
+    .vendor-left{
+        min-height:300px;
+    }
+}
+</style>
+
+<div class="vendor-section">
+
+    <!-- LEFT SIDE -->
+    <div class="vendor-left">
+        <div>
+            <h1>Grow With Our Wedding Platform</h1>
+            <p>Join as a verified vendor and connect with premium wedding clients effortlessly.</p>
         </div>
     </div>
-    {% include "layout/partials/guest/footer.html" %}
+
+    <!-- RIGHT SIDE -->
+    <div class="vendor-right">
+        <div class="vendor-card">
+
+            <h2 class="vendor-title">Vendor Registration</h2>
+
+            <form action="{% url 'app_dashboard:registration' %}" method="POST">
+                {% csrf_token %}
+
+                <div class="input-group">
+                    <input type="text" name="name" placeholder="Username" required minlength="8">
+                </div>
+
+                <div class="input-group">
+                    <input type="password" name="password" placeholder="Password" required minlength="8">
+                </div>
+
+                <div class="input-group">
+                    <input type="email" name="email" placeholder="Email Address" required>
+                </div>
+
+                <div class="services-grid">
+                    {% for i in cat %}
+                    <div class="service-item">
+                        <input type="checkbox" name="categories" value="{{i.id}}">
+                        {{ i.name }}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="input-group">
+                    <input type="text" name="license" placeholder="License Number" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" name="phone" placeholder="Phone Number" required pattern="[0-9]{10}">
+                </div>
+
+                <div class="input-group">
+                    <input type="text" name="location" placeholder="Business Location" required>
+                </div>
+
+                <button class="register-btn" type="submit">
+                    register
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+{% include "layout/partials/guest/footer.html" %}

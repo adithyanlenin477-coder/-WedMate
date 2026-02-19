@@ -9,12 +9,12 @@
                                 <form action="{% url 'app_core:category' %}" method="post" enctype="multipart/form-data">
 			                    {% csrf_token %}
                                 <div class="mb-3">
-                                    <label for="exampleInputCategory" class="form-label">Category name</label>
-                                    <input type="text" name="name" class="form-control" id="exampleInputCategory">
+                                    <label for="exampleInputCategory" class="form-label">Category name </label>
+                                    <input type="text" name="name" class="form-control" id="exampleInputCategory" required>
                                     <label for="exampleInputDescription" class="form-label">Description</label>
-                                    <input type="text" name="des" class="form-control" id="exampleInputDescription">
+                                    <input type="text" name="des" class="form-control" id="exampleInputDescription" required>
                                     <label for="exampleInputDescription" class="form-label">Image</label>
-                                    <input type="file" name="image" class="form-control" id="exampleInputImage">
+                                    <input type="file" name="image" class="form-control" id="exampleInputImage" required>
                                 </div>
                                 <div class="mb-3 form-check">
                                     <input type="checkbox" class="form-check-input" id="exampleCheck1">

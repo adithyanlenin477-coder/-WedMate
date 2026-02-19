@@ -1,0 +1,187 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Join WedMate</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:'Poppins',sans-serif;
+            height:100vh;
+            background: linear-gradient(135deg,#141e30,#243b55);
+            display:flex;
+            flex-direction:column;
+        }
+
+        /* ================= HEADER ================= */
+        .auth-header{
+            width:100%;
+            padding:20px 60px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .logo{
+            font-size:24px;
+            font-weight:700;
+            color:#fff;
+            letter-spacing:1px;
+        }
+
+        .auth-header a{
+            color:#ddd;
+            text-decoration:none;
+            font-size:14px;
+            transition:.3s;
+        }
+
+        .auth-header a:hover{
+            color:#fff;
+        }
+
+        /* ================= CENTER CONTENT ================= */
+        .auth-container{
+            flex:1;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:20px;
+        }
+
+        .auth-card{
+            width:100%;
+            max-width:500px;
+            background:rgba(255,255,255,0.06);
+            backdrop-filter: blur(20px);
+            border-radius:20px;
+            padding:50px 40px;
+            text-align:center;
+            box-shadow:0 20px 60px rgba(0,0,0,0.4);
+            animation: fadeUp .8s ease;
+        }
+
+        @keyframes fadeUp{
+            from{
+                opacity:0;
+                transform:translateY(40px);
+            }
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+
+        .auth-card h1{
+            color:#fff;
+            font-weight:600;
+            margin-bottom:15px;
+        }
+
+        .auth-card p{
+            color:#ccc;
+            font-size:14px;
+            margin-bottom:35px;
+        }
+
+        /* ================= BUTTONS ================= */
+        .role-btn{
+            display:block;
+            width:100%;
+            padding:16px;
+            margin:15px 0;
+            border-radius:10px;
+            font-weight:600;
+            text-decoration:none;
+            transition:.3s ease;
+            font-size:15px;
+        }
+
+        .vendor{
+            background:linear-gradient(45deg,#f8d210,#f0a500);
+            color:#000;
+        }
+
+        .vendor:hover{
+            transform:translateY(-3px);
+            box-shadow:0 15px 30px rgba(248,210,16,0.4);
+        }
+
+        .customer{
+            background:linear-gradient(45deg,#00c6ff,#0072ff);
+            color:#fff;
+        }
+
+        .customer:hover{
+            transform:translateY(-3px);
+            box-shadow:0 15px 30px rgba(0,114,255,0.4);
+        }
+
+        /* ================= FOOTER ================= */
+        .auth-footer{
+            text-align:center;
+            padding:15px;
+            font-size:13px;
+            color:#aaa;
+        }
+
+        .auth-footer a{
+            color:#ddd;
+            text-decoration:none;
+        }
+
+        .auth-footer a:hover{
+            color:#fff;
+        }
+
+        @media(max-width:576px){
+            .auth-card{
+                padding:35px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="auth-header">
+        <div class="logo">WedMate</div>
+        <a href="{% url 'app_dashboard:login' %}">Already have an account? Sign In</a>
+    </div>
+
+    <!-- CENTER CARD -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1>Join Our Platform</h1>
+            <p>Select your role to continue registration</p>
+
+            <a href="{% url 'app_dashboard:vendor_register' %}" 
+               class="role-btn vendor">
+                Register as Vendor
+            </a>
+
+            <a href="{% url 'app_dashboard:customer_register' %}" 
+               class="role-btn customer">
+                Register as Customer
+            </a>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="auth-footer">
+        © 2026 WedMate. All rights reserved.
+    </div>
+
+</body>
+</html>

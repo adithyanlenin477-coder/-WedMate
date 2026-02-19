@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate,login
 
 from app_dashboard.models import Customer, Vendor, VendorService
-from app_core.models import Category
+from app_core.models import Category, Eventtype
 from weddingmanagement.users.models import User
 from django.core.mail import send_mail
 
@@ -105,7 +105,19 @@ def customer_view(request):
         return HttpResponse("<script>alert('Register succesfull');window.location='/customerreg/';</script>")
     return render(request, "customerreg.html")
 def customer_dash(request):
-    return render(request, "customerdashboard.html")    
+    events = Eventtype.objects.all()  # fetch all event types
+    return render(request, "customerdashboard.html", {"events": events}) 
     
+def select_role(request):
+    return render(request, "select_role.html")
        
-       
+def event_list(request):
+    events = Eventtype.objects.all()  # Fetch all events
+    return render(request, 'event_list.html', {'events': events}) 
+
+def vendor_dashboard(request):
+    services = Category.objects.all()
+
+    return render(request, 'vendor_dashboard.html', {
+        'services': services
+    })

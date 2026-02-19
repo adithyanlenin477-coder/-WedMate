@@ -1,0 +1,207 @@
+{% load static %}
+{% include 'layout/partials/guest/header.html' %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f5f7fb;
+}
+
+/* Main Card */
+.dashboard-container {
+    margin-top: 60px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 35px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+    animation: fadeUp 0.6s ease-out;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Title */
+.dashboard-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 25px;
+}
+
+/* Table */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table thead th {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    color: #6b7280;
+    background: #f9fafb;
+    padding: 14px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table td {
+    padding: 16px 14px;
+    font-size: 14px;
+    color: #374151;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+/* Row Hover */
+.table tbody tr {
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background: #f9fafc;
+    transform: scale(1.005);
+}
+
+/* Status Badges */
+.badge-status {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-booked {
+    background: #e6f4ea;
+    color: #1e7e34;
+}
+
+.status-cancelled {
+    background: #fdecea;
+    color: #b42318;
+}
+
+.status-pending {
+    background: #fff4e5;
+    color: #b54708;
+}
+
+/* Payment */
+.payment-paid {
+    background: #e8f1ff;
+    color: #1d4ed8;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.payment-pending {
+    background: #f3f4f6;
+    color: #6b7280;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* Empty */
+.empty-state {
+    padding: 40px;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+</style>
+
+<div class="container">
+    <div class="dashboard-container">
+
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="dashboard-title">Customer Bookings</h2>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Customer</th>
+                        <th>Service</th>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Venue</th>
+                        <th>Guests</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for detail in booking_details %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>
+                            <strong>
+                                {{ detail.customer.get_full_name|default:detail.customer.username }}
+                            </strong>
+                        </td>
+
+                        <td>{{ detail.service.name }}</td>
+                        <td>{{ detail.event.name }}</td>
+                        <td>{{ detail.booking_master.event_date|default:"-" }}</td>
+                        <td>{{ detail.booking_master.venue|default:"-" }}</td>
+                        <td>{{ detail.booking_master.number_of_participants|default:"-" }}</td>
+                        <td>{{ detail.booking_master.time|default:"-" }}</td>
+
+                        <td>
+                            {% if detail.status == "booked" %}
+                                <span class="badge-status status-booked">Booked</span>
+                            {% elif detail.status == "cancelled" %}
+                                <span class="badge-status status-cancelled">Cancelled</span>
+                            {% else %}
+                                <span class="badge-status status-pending">{{ detail.status|capfirst }}</span>
+                            {% endif %}
+                        </td>
+
+                        <td><strong>₹ {{ detail.booking_master.grandtotal|default:"-" }}</strong></td>
+
+                        <td>
+                            {% if detail.booking_master.payment_set.exists %}
+                                <span class="payment-paid">Paid</span>
+                            {% else %}
+                                <span class="payment-pending">Pending</span>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ detail.booking_master.note|default:"-" }}</td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="12" class="text-center empty-state">
+                            No bookings available.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% include 'layout/partials/guest/footer.html' %}

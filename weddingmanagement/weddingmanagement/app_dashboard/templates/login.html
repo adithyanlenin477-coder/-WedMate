@@ -1,53 +1,186 @@
-  {% load static %}
-  {% include "layout/partials/guest/header.html" %}
-  <div class="contact-form section-padding30 fix">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-xl-6 col-lg-6">
-                    <div class="form-wrapper">
-                        <form id="contact-form" action="{% url 'app_dashboard:login' %}" method="POST">
-                            {% csrf_token %}
-                            <!-- section tittle -->
-                            <div class="row ">
-                                <div class="col-lg-12">
-                                    <div class="section-tittle tittle-form text-center mb-30">
-                                        <h2>LOGIN</h2>
-                                        <img src="{% static 'guest/assets/img/gallery/tittle_img2.png' %}" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-box mb-30">
-                                        <input type="text" name="name" placeholder="username">
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-box subject-icon mb-30">
-                                        <input type="password" name="password" placeholder="password">
-                                    </div>
-                                </div>
-                               
-                                <div class="col-lg-12">
-                                
-                                <div class="submit-info">
-                                    <button class="btn" type="submit">Login</button>
-                                </div>
-                                </div>
-                            </div>
-                        </form>
-                        <!-- Shape inner Flower -->
-                        <div class="shape-inner-flower">
-                            <img src="{% static 'guest/assets/img/gallery/shape2.png' %}" class="shpe2" alt="">
-                        </div>
-                        <!-- Shape outer Flower -->
-                        <div class="shape-outer-flower">
-                            <img src="{% static 'guest/assets/img/flower/from-top.png' %}" class="outer-top" alt="">
-                            <img src="{% static 'guest/assets/img/flower/from-bottom.png' %}" class="outer-bottom" alt="">
-                        </div>
-                    </div>
-                </div>
+{% load static %}
+{% include "layout/partials/guest/header.html" %}
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===============================
+   GLOBAL STYLING
+================================= */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #fef9f6, #fdfcfb, #f2f2f2);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ===============================
+   HEADER + MAIN ALIGNMENT
+================================= */
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 40px 20px;
+}
+
+/* ===============================
+   PREMIUM STATIC LOGO TOP LEFT
+================================= */
+.logo-wrapper {
+    position: absolute;
+    top: 30px;
+    left: 50px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #B88A2F; /* Elegant gold color */
+    letter-spacing: 1px;
+}
+
+.logo-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #8C6C2F;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+}
+
+/* ===============================
+   PREMIUM LOGIN CARD
+================================= */
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 50px 40px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(200, 180, 120, 0.3);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.login-card h2 {
+    text-align: center;
+    color: #B88A2F;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 35px;
+}
+
+/* Input Fields */
+.form-group { margin-bottom: 20px; }
+
+.login-card input {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.9);
+    color: #333;
+    font-size: 15px;
+    transition: 0.3s ease;
+}
+
+.login-card input::placeholder { color: rgba(0,0,0,0.4); }
+
+.login-card input:focus {
+    outline: none;
+    border-color: #B88A2F;
+    background: rgba(255,255,255,1);
+    box-shadow: 0 0 8px rgba(184,138,47,0.2);
+}
+
+/* Login Button */
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    background: #B88A2F; /* Elegant gold */
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s ease, transform 0.2s;
+}
+
+.login-btn:hover {
+    background: #8C6C2F;
+    transform: translateY(-1px);
+}
+
+/* Extra Links */
+.extra-links {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #333;
+}
+
+.extra-links a {
+    color: #B88A2F;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.extra-links a:hover { text-decoration: underline; }
+
+/* Fade in animation for card */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 576px) {
+    .login-card { padding: 35px 25px; }
+    .logo-wrapper { top: 20px; left: 20px; }
+    .logo-text { font-size: 28px; }
+    .logo-subtitle { font-size: 12px; }
+}
+</style>
+
+<!-- LOGO -->
+<div class="logo-wrapper">
+    <div class="logo-text">WedMate</div>
+    <div class="logo-subtitle">Your Dream Wedding Partner</div>
+</div>
+
+<!-- MAIN LOGIN CONTENT -->
+<div class="main-content">
+    <div class="login-card">
+        <h2>Welcome Back</h2>
+        <form action="{% url 'app_dashboard:login' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="name" placeholder="Username" required>
             </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+        <div class="extra-links">
+            <p>Don't have an account? <a href="{% url 'app_dashboard:select_role' %}">Register</a></p>
         </div>
     </div>
-    {% include "layout/partials/guest/footer.html" %}
+</div>
+
+{% include "layout/partials/guest/footer.html" %}

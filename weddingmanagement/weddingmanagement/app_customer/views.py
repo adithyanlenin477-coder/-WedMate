@@ -13,16 +13,30 @@ from django.utils import timezone
 
 # Create your views here.
 def serviceview(request):
-    Evnt=Eventtype.objects.all()
-    return render(request,'servicesview.html',{'evnt':Evnt})
+    evnt = Eventtype.objects.all()
+    return render(request, 'servicesview.html', {'evnt': evnt})
 
-def categoryview(request,id):
-    Cat=Category.objects.all()
-    return render(request,'categoriesview.html',{'cat':Cat,"cid":id})
+def categoryview(request, id):
+    Cat = Category.objects.all()
+
+    date = request.session.get('event_date')
+    time = request.session.get('event_time')
+
+    return render(request,'categoriesview.html',{
+        'cat': Cat,
+        "cid": id,
+        "date": date,
+        "time": time
+    })
+
 
 
 def pricedetails(request, service_id,cid):
+    date = request.session.get('event_date')
+    time = request.session.get('event_time')
+    
     if request.method=="POST":
+        
         serviceid=request.POST.get("service")
         event=request.POST.get("event")
         booking=Booking_details()
@@ -32,13 +46,18 @@ def pricedetails(request, service_id,cid):
         booking.save()
         return HttpResponse("<script>alert('added successfully');window.location='/customer/booking_details_view'</script>")
 
-
+    booked_vendor_services = Booking_details.objects.filter(
+        booking_master__event_date=date,
+        booking_master__time=time
+    ).values_list('service_id', flat=True)
     # Service / Category (Stage Decoration)
     service = Category.objects.get(id=service_id)
 
     # Fetch ALL prices for this service (any vendor)
     prices = VendorService.objects.filter(
         service_id=service_id
+    ).exclude(
+        id__in=booked_vendor_services
     ).select_related('service')
 
     context = {
@@ -80,8 +99,9 @@ def book_service(request):
             customer=request.user,
             booking_master__isnull=True
         ).update(booking_master=booking)
+        
 
-        return redirect("app_customer:payment_page", booking_id=booking.id)
+        return redirect("app_customer:payment_page", booking_id=booking.id,)
 
     total = Booking_details.objects.filter(
         customer=request.user,
@@ -89,8 +109,9 @@ def book_service(request):
     ).aggregate(
         total_amount=Sum('service__amount')
     )['total_amount'] or Decimal('0.00')
-
-    return render(request, "booking.html", {"grandtotal": total})
+    date = request.session.get('event_date')
+    time = request.session.get('event_time')
+    return render(request, "booking.html", {"grandtotal": total,"date":date,"time":time})
 
 def bookingdetails_view(request): 
     list=Booking_details.objects.filter(customer=request.user,booking_master__isnull=True)
@@ -142,3 +163,19 @@ def payment_page(request, booking_id):
         "total": total,
         "advance": advance
     })
+    
+def event_datetime(request, id):
+    event = get_object_or_404(Eventtype, id=id)
+
+    if request.method == "POST":
+        date = request.POST.get("date")
+        time = request.POST.get("time")
+
+        # Store in session
+        request.session['event_id'] = id
+        request.session['event_date'] = date
+        request.session['event_time'] = time
+
+        return redirect('app_customer:categoryv', id=id)
+
+    return render(request, "event_datetime.html", {"event": event})    

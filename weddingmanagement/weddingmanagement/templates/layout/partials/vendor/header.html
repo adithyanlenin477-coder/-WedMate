@@ -54,16 +54,11 @@
                                 <nav>                              
                                     <ul id="navigation">                                                          
                                         <li><a href="index.html"> home</a></li>
-                                        <li><a href="about.html">About</a></li>
-                                        <li><a href="{% url 'app_vendor:gallery' %}">gallery</a></li>
+                                        <li><a href="{% url 'app_vendor:vendor_bookings' %}">BOOKING DETAILS</a></li>
+                                        <li><a href="{% url 'app_vendor:gallery' %}">ADD GALLERY</a></li>
                                         <li><a href="{% url 'app_vendor:sdetails' %}"> SERVICE DETAILS</a></li>
-                                        <li><a href="{% url 'app_vendor:vendor_payments' %}"> PAYMENTS</a></li>
-                                        <li><a href="blog.html">Blog</a>
-                                            <ul class="submenu">
-                                                <li><a href="blog.html">Blog</a></li>
-                                                <li><a href="single-blog.html">Blog Details</a></li>
-                                                <li><a href="elements.html">Element</a></li>
-                                            </ul>
+                                        <li><a href="{% url 'app_vendor:vendor_payments' %}">PAYMENTS</a></li>
+                                        <li><a href="{% url 'app_vendor:gallery_table' %}">MY GALLERY</a>
                                         </li>
                                         <li><a href="contact.html">Contact Us</a></li>
                                     </ul>

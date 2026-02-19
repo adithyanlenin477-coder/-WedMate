@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Date & Time | WedMate</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:'Poppins',sans-serif;
+            background: linear-gradient(135deg,#1e3c72,#2a5298);
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .datetime-card{
+            width:100%;
+            max-width:500px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px);
+            padding:50px 40px;
+            border-radius:20px;
+            box-shadow:0 20px 60px rgba(0,0,0,0.4);
+            text-align:center;
+            animation: fadeUp .8s ease;
+        }
+
+        @keyframes fadeUp{
+            from{
+                opacity:0;
+                transform:translateY(40px);
+            }
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+
+        .datetime-card h2{
+            color:white;
+            margin-bottom:10px;
+        }
+
+        .datetime-card p{
+            color:#ddd;
+            font-size:14px;
+            margin-bottom:30px;
+        }
+
+        .form-group{
+            margin-bottom:25px;
+            text-align:left;
+        }
+
+        label{
+            color:white;
+            font-size:14px;
+            display:block;
+            margin-bottom:8px;
+        }
+
+        input{
+            width:100%;
+            padding:14px;
+            border-radius:8px;
+            border:none;
+            outline:none;
+            font-size:14px;
+        }
+
+        input:focus{
+            box-shadow:0 0 10px rgba(255,255,255,0.4);
+        }
+
+        .continue-btn{
+            width:100%;
+            padding:14px;
+            border-radius:8px;
+            border:none;
+            background:linear-gradient(45deg,#f8d210,#f0a500);
+            font-weight:600;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        .continue-btn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 10px 20px rgba(248,210,16,0.4);
+        }
+
+        .step-indicator{
+            margin-bottom:25px;
+            font-size:13px;
+            color:#ccc;
+        }
+
+        .step-indicator span{
+            color:#fff;
+            font-weight:600;
+        }
+
+        @media(max-width:576px){
+            .datetime-card{
+                padding:35px 25px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="datetime-card">
+
+    <div class="step-indicator">
+        Step <span>2</span> of 3
+    </div>
+
+    <h2>Select Date & Time</h2>
+    <p>Choose your preferred schedule for <strong>{{ event.name }}</strong></p>
+
+    <form method="POST" action="{% url 'app_customer:event_datetime' event.id %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Select Event Date</label>
+            <input type="date" name="date" required>
+        </div>
+
+        <div class="form-group">
+            <label>Select Event Time</label>
+            <input type="time" name="time" required>
+        </div>
+
+        <button type="submit" class="continue-btn">
+            Continue to Services →
+        </button>
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -20,12 +20,14 @@ class Booking_master(models.Model):
     grandtotal=models.CharField(null=True,blank=True)
 
 class Booking_details(models.Model):
+    status=models.CharField(max_length=100,default='booked')
     booking_master=models.ForeignKey(Booking_master, on_delete=models.SET_NULL,   # important
         null=True,
         blank=True, related_name="details")
     service=models.ForeignKey(VendorService, on_delete=models.CASCADE, related_name="bookings_service")
     event=models.ForeignKey(Eventtype, on_delete=models.CASCADE, related_name="bookings_event")
     customer=models.ForeignKey(User,on_delete=models.CASCADE,related_name="booking_customer")
+   
 
 class Payment(models.Model):
     booking = models.ForeignKey(Booking_master, on_delete=models.CASCADE)

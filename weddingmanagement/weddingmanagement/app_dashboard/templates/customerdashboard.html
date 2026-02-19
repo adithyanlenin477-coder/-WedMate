@@ -24,168 +24,362 @@
           </div>
       </div>
   </section>
+
+  
   <!-- ***** Main Banner Area End ***** -->
+<section class="premium-events">
 
-  <section class="services">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="owl-service-item owl-carousel">
-          
-            <div class="item">
-              <div class="icon">
-                <img src="{% static 'vendor/assets/images/service-icon-01.png' %}" alt="">
-              </div>
-              <div class="down-content">
-                <h4>Best Education</h4>
-                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p>
-              </div>
-            </div>
-            
-            <div class="item">
-              <div class="icon">
-                <img src="{% static 'vendor/assets/images/service-icon-02.png' %}" alt="">
-              </div>
-              <div class="down-content">
-                <h4>Best Teachers</h4>
-                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p>
-              </div>
-            </div>
-            
-            <div class="item">
-              <div class="icon">
-                <img src="{% static 'vendor/assets/images/service-icon-03.png' %}" alt="">
-              </div>
-              <div class="down-content">
-                <h4>Best Students</h4>
-                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p>
-              </div>
-            </div>
-            
-            <div class="item">
-              <div class="icon">
-                <img src="{% static 'vendor/assets/images/service-icon-02.png' %}" alt="">
-              </div>
-              <div class="down-content">
-                <h4>Online Meeting</h4>
-                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p>
-              </div>
-            </div>
-            
-            <div class="item">
-              <div class="icon">
-                <img src="{% static 'vendor/assets/images/service-icon-03.png' %}" alt="">
-              </div>
-              <div class="down-content">
-                <h4>Best Networking</h4>
-                <p>Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.</p>
-              </div>
-            </div>
-            
+  <div class="container">
+
+    <!-- Premium Heading -->
+    <div class="section-header text-center">
+        <h2 class="premium-title">Our Events</h2>
+        <p class="premium-subtitle">Crafting unforgettable experiences with elegance and perfection</p>
+        <div class="premium-divider"><span></span></div>
+    </div>
+
+    <!-- Premium Slider -->
+    <div class="premium-slider">
+      <div class="slider-track">
+
+        {% for event in events %}
+        <div class="slider-card">
+          {% if event.image %}
+          <img src="{{ event.image.url }}" alt="{{ event.name }}">
+          {% else %}
+          <img src="{% static 'vendor/assets/images/default-event.png' %}" alt="{{ event.name }}">
+          {% endif %}
+          <div class="card-overlay">
+            <h4>{{ event.name }}</h4>
+            <p>{{ event.description|truncatewords:20 }}</p>
           </div>
         </div>
+        {% endfor %}
+
+        {% for event in events %}
+        <div class="slider-card">
+          {% if event.image %}
+          <img src="{{ event.image.url }}" alt="{{ event.name }}">
+          {% else %}
+          <img src="{% static 'vendor/assets/images/default-event.png' %}" alt="{{ event.name }}">
+          {% endif %}
+          <div class="card-overlay">
+            <h4>{{ event.name }}</h4>
+            <p>{{ event.description|truncatewords:20 }}</p>
+          </div>
+        </div>
+        {% endfor %}
+
       </div>
     </div>
-  </section>
 
-  <section class="upcoming-meetings" id="meetings">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="section-heading">
-            <h2>Upcoming Meetings</h2>
+  </div>
+</section>
+
+
+
+<style>
+/* =====================================
+   PREMIUM EVENTS SECTION
+===================================== */
+
+.premium-events {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #fffaf0, #ffffff);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ================= HEADING ================= */
+
+.section-header {
+    margin-bottom: 70px;
+    text-align: center;
+    animation: fadeUp 1s ease forwards;
+    opacity: 0;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.premium-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 46px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #C6A75E, #FFD700, #C6A75E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    display: inline-block;
+}
+
+/* Shimmer Effect */
+.premium-title::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.7),
+        transparent
+    );
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 150%; }
+}
+
+.premium-subtitle {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #6b6b6b;
+    letter-spacing: 1px;
+}
+
+.premium-divider {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.premium-divider span {
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #C6A75E, transparent);
+    border-radius: 3px;
+    position: relative;
+}
+
+.premium-divider span::before {
+    content: "◆";
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #C6A75E;
+    font-size: 18px;
+}
+
+/* ================= SLIDER ================= */
+
+.premium-slider {
+    overflow: hidden;
+    position: relative;
+}
+
+.slider-track {
+    display: flex;
+    gap: 30px;
+    animation: scroll 25s linear infinite;
+}
+
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.slider-card {
+    min-width: 320px;
+    flex: 0 0 auto;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    background: #fff;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.slider-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+}
+
+.slider-card img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.slider-card:hover img {
+    transform: scale(1.08);
+}
+
+.card-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 22px;
+    background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
+    color: #fff;
+    transition: 0.4s ease;
+}
+
+.card-overlay h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: #FFD700;
+}
+
+.card-overlay p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #f5f5f5;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+    .premium-title {
+        font-size: 32px;
+    }
+
+    .slider-card {
+        min-width: 250px;
+    }
+
+    .slider-card img {
+        height: 200px;
+    }
+}
+</style>
+
+
+
+
+
+<section class="our-services" id="services">
+  <div class="container">
+
+    <div class="section-heading text-center mb-5">
+      <h2>Our Services</h2>
+      <p>Professional services crafted for unforgettable events</p>
+    </div>
+
+    <div class="row">
+
+      {% for service in services %}
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="service-card">
+
+          <div class="service-img">
+            {% if service.image %}
+              <img src="{{ service.image.url }}" alt="{{ service.name }}">
+            {% else %}
+              <img src="{% static 'vendor/assets/images/default-event.png' %}" alt="Default Image">
+            {% endif %}
           </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="categories">
-            <h4>Meeting Catgories</h4>
-            <ul>
-              <li><a href="#">Sed tempus enim leo</a></li>
-              <li><a href="#">Aenean molestie quis</a></li>
-              <li><a href="#">Cras et metus vestibulum</a></li>
-              <li><a href="#">Nam et condimentum</a></li>
-              <li><a href="#">Phasellus nec sapien</a></li>
-            </ul>
-            <div class="main-button-red">
-              <a href="meetings.html">All Upcoming Meetings</a>
-            </div>
+
+          <div class="service-content">
+            <h4>{{ service.name }}</h4>
+            <p>{{ service.description|truncatewords:15 }}</p>
           </div>
-        </div>
-        <div class="col-lg-8">
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="meeting-item">
-                <div class="thumb">
-                  <div class="price">
-                    <span>$22.00</span>
-                  </div>
-                  <a href="meeting-details.html"><img src="{% static 'vendor/assets/images/meeting-01.jpg' %}" alt="New Lecturer Meeting"></a>
-                </div>
-                <div class="down-content">
-                  <div class="date">
-                    <h6>Nov <span>10</span></h6>
-                  </div>
-                  <a href="meeting-details.html"><h4>New Lecturers Meeting</h4></a>
-                  <p>Morbi in libero blandit lectus<br>cursus ullamcorper.</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="meeting-item">
-                <div class="thumb">
-                  <div class="price">
-                    <span>$36.00</span>
-                  </div>
-                  <a href="meeting-details.html"><img src="{% static 'vendor/assets/images/meeting-02.jpg' %}" alt="Online Teaching"></a>
-                </div>
-                <div class="down-content">
-                  <div class="date">
-                    <h6>Nov <span>24</span></h6>
-                  </div>
-                  <a href="meeting-details.html"><h4>Online Teaching Techniques</h4></a>
-                  <p>Morbi in libero blandit lectus<br>cursus ullamcorper.</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="meeting-item">
-                <div class="thumb">
-                  <div class="price">
-                    <span>$14.00</span>
-                  </div>
-                  <a href="meeting-details.html"><img src="{% static 'vendor/assets/images/meeting-03.jpg' %}" alt="Higher Education"></a>
-                </div>
-                <div class="down-content">
-                  <div class="date">
-                    <h6>Nov <span>26</span></h6>
-                  </div>
-                  <a href="meeting-details.html"><h4>Higher Education Conference</h4></a>
-                  <p>Morbi in libero blandit lectus<br>cursus ullamcorper.</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="meeting-item">
-                <div class="thumb">
-                  <div class="price">
-                    <span>$48.00</span>
-                  </div>
-                  <a href="meeting-details.html"><img src="{% static 'vendor/assets/images/meeting-04.jpg' %}" alt="Student Training"></a>
-                </div>
-                <div class="down-content">
-                  <div class="date">
-                    <h6>Nov <span>30</span></h6>
-                  </div>
-                  <a href="meeting-details.html"><h4>Student Training Meetup</h4></a>
-                  <p>Morbi in libero blandit lectus<br>cursus ullamcorper.</p>
-                </div>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
+
+      {% empty %}
+        <div class="col-12 text-center">
+          <p>No services available</p>
+        </div>
+      {% endfor %}
+
     </div>
-  </section>
+  </div>
+</section>
+<style>
+  /* ==============================
+   OUR SERVICES SECTION
+================================ */
+
+.our-services {
+    padding: 100px 0;
+    background: #f9f9f9;
+}
+
+.section-heading h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #1e1e1e;
+}
+
+.section-heading p {
+    color: #777;
+    margin-bottom: 60px;
+}
+
+/* ================= CARD DESIGN ================= */
+
+.service-card {
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    transition: 0.4s ease;
+    height: 100%;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+}
+
+.service-img {
+    overflow: hidden;
+}
+
+.service-img img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    transition: 0.5s ease;
+}
+
+.service-card:hover img {
+    transform: scale(1.08);
+}
+
+.service-content {
+    padding: 25px;
+}
+
+.service-content h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.service-content p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+    .section-heading h2 {
+        font-size: 30px;
+    }
+
+    .service-img img {
+        height: 200px;
+    }
+}
+</style>
 
   <section class="apply-now" id="apply">
     <div class="container">

@@ -86,8 +86,11 @@ def gallery(request):
     })
 
 def gallery_table(request):
-    galleries = Gallery.objects.select_related('vendor', 'service').all()
-    return render(request, 'gallerytable.html', {'galleries': galleries})
+    galleries = Gallery.objects.select_related('vendor', 'service').filter(vendor=request.user)
+    
+    return render(request, 'gallerytable.html', {
+        'galleries': galleries
+    })
 
 def gallery_edit(request, id):
     gallery = get_object_or_404(Gallery, id=id)
@@ -193,4 +196,21 @@ def vendor_payment_list(request):
         'total_advance': total_advance.quantize(Decimal('0.01')),
         'total_admin_share': total_admin_share.quantize(Decimal('0.01')),
         'total_vendor_net': total_vendor_net.quantize(Decimal('0.01')),
+    })
+    
+def vendor_bookings(request):
+    vendor = request.user
+
+    booking_details = Booking_details.objects.filter(
+        service__vendor=vendor,     # Service belongs to this vendor
+        booking_master__isnull=False   # Only valid bookings
+    ).select_related(
+        'service',
+        'booking_master',
+        'customer',
+        'event'
+    ).order_by('-booking_master__booking_date')
+
+    return render(request, 'vendor_bookings.html', {
+        'booking_details': booking_details
     })

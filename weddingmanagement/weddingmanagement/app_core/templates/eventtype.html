@@ -10,11 +10,11 @@
 			                    {% csrf_token %}
                                 <div class="mb-3">
                                     <label for="exampleInputEventtype" class="form-label">Event name</label>
-                                    <input type="text" name="name" class="form-control" id="exampleInputEventtype">
+                                    <input type="text" name="name" class="form-control" id="exampleInputEventtype" required>
                                     <label for="exampleInputDescription" class="form-label">Description</label>
-                                    <input type="text" name="des" class="form-control" id="exampleInputDescription">
+                                    <input type="text" name="des" class="form-control" id="exampleInputDescription" required>
                                     <label for="exampleInputDescription" class="form-label">Image</label>
-                                    <input type="file" name="image" class="form-control" id="exampleInputImage">
+                                    <input type="file" name="image" class="form-control" id="exampleInputImage" required>
                                 </div>
                                 <div class="mb-3 form-check">
                                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
