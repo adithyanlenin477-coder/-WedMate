@@ -105,8 +105,13 @@ def customer_view(request):
         return HttpResponse("<script>alert('Register succesfull');window.location='/customerreg/';</script>")
     return render(request, "customerreg.html")
 def customer_dash(request):
-    events = Eventtype.objects.all()  # fetch all event types
-    return render(request, "customerdashboard.html", {"events": events}) 
+    events = Eventtype.objects.all()
+    categories = Category.objects.all()
+
+    return render(request, "customerdashboard.html", {
+        "events": events,
+        "categories": categories
+    }) 
     
 def select_role(request):
     return render(request, "select_role.html")
@@ -116,8 +121,8 @@ def event_list(request):
     return render(request, 'event_list.html', {'events': events}) 
 
 def vendor_dashboard(request):
-    services = Category.objects.all()
+    categories = Category.objects.all()
 
     return render(request, 'vendor_dashboard.html', {
-        'services': services
+        'categories': categories
     })

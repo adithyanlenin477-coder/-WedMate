@@ -258,128 +258,179 @@
 
 
 
-<section class="our-services" id="services">
+<section class="premium-events">
   <div class="container">
 
-    <div class="section-heading text-center mb-5">
-      <h2>Our Services</h2>
-      <p>Professional services crafted for unforgettable events</p>
+    <div class="section-header text-center">
+        <h2 class="premium-title">Our Services</h2>
+        <p class="premium-subtitle">
+          Explore our exclusive range of wedding services designed to bring elegance, beauty, and perfection to your special day.
+        </p>
     </div>
 
-    <div class="row">
+    <div class="coverflow-container">
 
-      {% for service in services %}
-      <div class="col-lg-4 col-md-6 mb-4">
-        <div class="service-card">
+        {% for category in categories %}
+        <div class="cover-card">
 
-          <div class="service-img">
-            {% if service.image %}
-              <img src="{{ service.image.url }}" alt="{{ service.name }}">
+            {% if category.image %}
+                <img src="{{ category.image.url }}" alt="{{ category.name }}">
             {% else %}
-              <img src="{% static 'vendor/assets/images/default-event.png' %}" alt="Default Image">
+                <img src="{% static 'vendor/assets/images/default-event.png' %}" alt="Default">
             {% endif %}
-          </div>
 
-          <div class="service-content">
-            <h4>{{ service.name }}</h4>
-            <p>{{ service.description|truncatewords:15 }}</p>
-          </div>
+            <div class="card-overlay">
+                <h4>{{ category.name }}</h4>
+                <p>{{ category.description|truncatewords:15 }}</p>
+            </div>
 
         </div>
-      </div>
-
-      {% empty %}
-        <div class="col-12 text-center">
-          <p>No services available</p>
-        </div>
-      {% endfor %}
+        {% endfor %}
 
     </div>
+
   </div>
 </section>
+
 <style>
-  /* ==============================
-   OUR SERVICES SECTION
-================================ */
 
-.our-services {
-    padding: 100px 0;
-    background: #f9f9f9;
+/* SECTION */
+.premium-events {
+    padding: 80px 0;   /* Reduced from 140px */
 }
 
-.section-heading h2 {
+/* HEADING */
+.section-header {
+    margin-bottom: 50px;   /* Reduced from 90px */
+}
+
+.premium-title {
     font-family: 'Playfair Display', serif;
-    font-size: 42px;
+    font-size: 52px;
     font-weight: 700;
-    margin-bottom: 10px;
-    color: #1e1e1e;
+    background: linear-gradient(90deg, #C6A75E, #FFD700, #C6A75E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.section-heading p {
-    color: #777;
-    margin-bottom: 60px;
+.premium-subtitle {
+    margin-top: 15px;
+    font-size: 17px;
+    color: #6b6b6b;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* ================= CARD DESIGN ================= */
+/* COVERFLOW CONTAINER */
+.coverflow-container {
+    position: relative;
+    height: 420px;   /* Increased */
+    perspective: 1400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-.service-card {
-    background: #fff;
-    border-radius: 15px;
+/* BIGGER RECTANGLE CARD */
+.cover-card {
+    position: absolute;
+    width: 500px;   /* Increased width */
+    height: 320px;  /* Increased height */
+    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-    transition: 0.4s ease;
-    height: 100%;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+    transition: 1s ease;
+    opacity: 0;
 }
 
-.service-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 25px 60px rgba(0,0,0,0.15);
-}
-
-.service-img {
-    overflow: hidden;
-}
-
-.service-img img {
+.cover-card img {
     width: 100%;
-    height: 240px;
+    height: 100%;
     object-fit: cover;
-    transition: 0.5s ease;
 }
 
-.service-card:hover img {
-    transform: scale(1.08);
-}
-
-.service-content {
+/* OVERLAY */
+.card-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     padding: 25px;
+    background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2));
+    color: #fff;
 }
 
-.service-content h4 {
+.card-overlay h4 {
     font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    margin-bottom: 10px;
-    color: #333;
+    font-size: 24px;
+    color: #FFD700;
 }
 
-.service-content p {
-    font-size: 14px;
-    color: #666;
-    line-height: 1.6;
+/* POSITION CLASSES (More spacing now) */
+.cover-card.left {
+    transform: translateX(-420px) rotateY(35deg) scale(0.88);
+    opacity: 0.6;
+    z-index: 1;
 }
 
-/* ================= RESPONSIVE ================= */
+.cover-card.center {
+    transform: translateX(0) rotateY(0deg) scale(1);
+    opacity: 1;
+    z-index: 3;
+}
 
+.cover-card.right {
+    transform: translateX(420px) rotateY(-35deg) scale(0.88);
+    opacity: 0.6;
+    z-index: 1;
+}
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
-    .section-heading h2 {
-        font-size: 30px;
+    .cover-card {
+        width: 320px;
+        height: 220px;
     }
 
-    .service-img img {
-        height: 200px;
+    .cover-card.left {
+        transform: translateX(-220px) rotateY(30deg) scale(0.85);
+    }
+
+    .cover-card.right {
+        transform: translateX(220px) rotateY(-30deg) scale(0.85);
+    }
+
+    .premium-title {
+        font-size: 34px;
     }
 }
+
 </style>
+
+<script>
+
+let cards = document.querySelectorAll(".cover-card");
+let index = 0;
+
+function updateCards() {
+    cards.forEach(card => {
+        card.classList.remove("left", "center", "right");
+    });
+
+    cards[index].classList.add("center");
+    cards[(index + 1) % cards.length].classList.add("right");
+    cards[(index - 1 + cards.length) % cards.length].classList.add("left");
+}
+
+setInterval(() => {
+    index = (index + 1) % cards.length;
+    updateCards();
+}, 4500);  // Slightly slower
+
+updateCards();
+
+</script>
+
 
   <section class="apply-now" id="apply">
     <div class="container">
