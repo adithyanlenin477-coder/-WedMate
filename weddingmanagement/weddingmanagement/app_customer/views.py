@@ -179,3 +179,21 @@ def event_datetime(request, id):
         return redirect('app_customer:categoryv', id=id)
 
     return render(request, "event_datetime.html", {"event": event})    
+
+
+def vendor_reviews(request, vendor_id):
+    vendor = get_object_or_404(Vendor, id=vendor_id)
+    reviews = vendor.reviews.all().order_by('-created_at')
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.customer = request.user
+            review.vendor = vendor
+            review.save()
+            return redirect('vendor_reviews', vendor_id=vendor.id)
+    else:
+        form = ReviewForm()
+
+    return render(request, 'vendor_reviews.html', {'vendor': vendor, 'reviews': reviews, 'form': form})

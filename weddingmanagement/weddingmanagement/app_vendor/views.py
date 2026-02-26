@@ -1,13 +1,14 @@
 
 from decimal import Decimal
+from pyexpat.errors import messages
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from app_vendor.models import  Staff
+from app_vendor.models import  Staff, StaffAssignment
 
 from app_dashboard.models import Vendor, VendorService
 from app_core.models import Category
-from app_customer.models import Booking_details, Gallery, Payment
+from app_customer.models import Booking_details, Booking_master, Gallery, Payment
 from weddingmanagement.users.models import User
 
 # Create your views here.
@@ -26,7 +27,7 @@ def staff_view(request):
         u=User()
         u.name=name
         u.username=uname
-        u.password=password
+        u.set_password(password)
         u.email=email
         u.role="staff"
         u.save()
@@ -36,35 +37,44 @@ def staff_view(request):
         c.phno=phone
         c.gender=gender
         c.user=User.objects.get(username=uname)
+        c.vendor=request.user
         c.save()
-        return HttpResponse("<script>alert('Register succesfull');window.location='/vendor/staff/';</script>")
+        return HttpResponse("<script>alert('Register succesfull');window.location='/vendor/stafftable/';</script>")
     return render(request, "staffreg.html")
 
 def staffv(request):
-       Sta=Staff.objects.all()
+       Sta=Staff.objects.filter(vendor=request.user)
        return render(request,'stafftable.html',{'sta':Sta})
 
 def servicedetails(request):
-    if request.method=="POST":
+    if request.method == "POST":
         service_ids = request.POST.getlist("service_id[]")
         amounts = request.POST.getlist("amount[]")
+        hours_list = request.POST.getlist("hours[]")
         images = request.FILES.getlist("image[]")
 
-
         for idx, sid in enumerate(service_ids):
-            ven = VendorService.objects.get(id=sid)
+            try:
+                ven = VendorService.objects.get(id=sid, vendor=request.user)
+            except VendorService.DoesNotExist:
+                continue
 
-            # amount
-            if idx < len(amounts):
+            # Amount
+            if idx < len(amounts) and amounts[idx]:
                 ven.amount = amounts[idx]
 
-            # image
+            # Hours
+            if idx < len(hours_list) and hours_list[idx]:
+                ven.hours = hours_list[idx]
+
+            # Image
             if idx < len(images):
                 ven.image = images[idx]
 
             ven.save()
-    service=VendorService.objects.filter(vendor=request.user)
-    return render(request, "servicedetails.html",{"service":service})   
+
+    service = VendorService.objects.filter(vendor=request.user)
+    return render(request, "servicedetails.html", {"service": service}) 
 
 def gallery(request):
     services = VendorService.objects.filter(vendor=request.user)
@@ -199,18 +209,69 @@ def vendor_payment_list(request):
     })
     
 def vendor_bookings(request):
-    vendor = request.user
 
-    booking_details = Booking_details.objects.filter(
-        service__vendor=vendor,     # Service belongs to this vendor
-        booking_master__isnull=False   # Only valid bookings
-    ).select_related(
-        'service',
-        'booking_master',
-        'customer',
-        'event'
-    ).order_by('-booking_master__booking_date')
+    # 🔹 Remove Staff Assignment
+    if request.method == "POST":
+        assignment_id = request.POST.get("assignment_id")
+
+        if assignment_id:
+            StaffAssignment.objects.filter(
+                id=assignment_id,
+                booking__details__service__vendor=request.user
+            ).delete()
+
+        return redirect("app_vendor:vendor_bookings")
+
+    # 🔹 Fetch Vendor Bookings
+    bookings = (
+        Booking_master.objects
+        .filter(details__service__vendor=request.user)
+        .distinct()
+        .prefetch_related(
+            'details__service',
+            'details__event',
+            'staff_assignments__staff__user'
+        )
+        .order_by('-booking_date')
+    )
 
     return render(request, 'vendor_bookings.html', {
-        'booking_details': booking_details
+        'bookings': bookings
+    })
+    
+def assign_staff(request, booking_id):
+
+    # Ensure booking belongs to this vendor
+    booking = Booking_master.objects.filter(
+        id=booking_id,
+        details__service__vendor=request.user
+    ).distinct().first()
+
+    if not booking:
+        return redirect('app_vendor:vendor_bookings')
+
+    # Fetch only this vendor's staff
+    staff_members = Staff.objects.filter(
+        vendor=request.user
+    ).select_related("user")
+
+    if request.method == "POST":
+        staff_id = request.POST.get("staff_id")
+
+        staff = Staff.objects.filter(
+            id=staff_id,
+            vendor=request.user
+        ).first()
+
+        if staff:
+            StaffAssignment.objects.get_or_create(
+                booking=booking,
+                staff=staff
+            )
+
+        return redirect('app_vendor:vendor_bookings')
+
+    return render(request, 'assign_staff.html', {
+        'booking': booking,
+        'staff_members': staff_members
     })

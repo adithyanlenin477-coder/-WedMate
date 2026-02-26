@@ -1,0 +1,75 @@
+{% include "layout/partials/admin/header.html" %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container mt-5">
+    <div class="page-inner">
+        <div class="row justify-content-center">
+
+            <div class="col-md-8">
+                <div class="card shadow-lg border-0">
+                    
+                    <div class="card-header bg-dark text-white text-center">
+                        <h4 class="mb-0">💍 Wedding Bookings by Service Category</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="chart-container" style="min-height: 400px">
+                            <canvas id="bookingChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('bookingChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ labels|safe }},
+            datasets: [{
+                data: {{ data|safe }},
+                backgroundColor: [
+                    '#C9A227',
+                    '#8E44AD',
+                    '#E74C3C',
+                    '#1ABC9C',
+                    '#F39C12',
+                    '#2C3E50',
+                    '#D35400',
+                    '#16A085'
+                ],
+                borderWidth: 3,
+                borderColor: "#ffffff"
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: "65%",
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ": " + context.raw + " bookings";
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+{% include "layout/partials/admin/footer.html" %}

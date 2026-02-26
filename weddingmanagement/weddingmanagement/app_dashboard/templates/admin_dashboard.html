@@ -263,6 +263,52 @@
                     </div>
                 </div>
             </div>
+            <script>
+    const ctx = document.getElementById('bookingChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ labels|safe }},
+            datasets: [{
+                data: {{ data|safe }},
+                backgroundColor: [
+                    '#C9A227',
+                    '#8E44AD',
+                    '#E74C3C',
+                    '#1ABC9C',
+                    '#F39C12',
+                    '#2C3E50',
+                    '#D35400',
+                    '#16A085'
+                ],
+                borderWidth: 3,
+                borderColor: "#ffffff"
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: "65%",
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ": " + context.raw + " bookings";
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
             <!-- Widgets End -->
           {% include 'layout/partials/admin/footer.html' %}
 

@@ -15,6 +15,7 @@ class VendorService(models.Model):
     service = models.ForeignKey(Category, on_delete=models.CASCADE,related_name="services")
     amount = models.DecimalField(max_digits=10, decimal_places=2,null=True)
     image=models.ImageField(upload_to="media/",null=True)
+    duration=models.CharField(null=True,blank=True)
 
     class Meta:
         unique_together = ('vendor', 'service')

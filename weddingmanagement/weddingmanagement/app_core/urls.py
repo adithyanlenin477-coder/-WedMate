@@ -26,4 +26,5 @@ urlpatterns = [
     path("vendorv/", views.vendorview, name="vendrv"),
     path("customertable/",views.custv,name='customertable'),
     path('admin/payments/', views.admin_payment_list, name='admin_payment_list'),
+    path('admin_booking_report/', views.admin_booking_report, name='admin_booking_report'),
 ]

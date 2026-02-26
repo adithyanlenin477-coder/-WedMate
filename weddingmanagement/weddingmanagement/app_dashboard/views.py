@@ -6,12 +6,62 @@ from django.contrib.auth import authenticate,login
 
 from app_dashboard.models import Customer, Vendor, VendorService
 from app_core.models import Category, Eventtype
+from app_customer.models import Booking_details
 from weddingmanagement.users.models import User
 from django.core.mail import send_mail
+from django.db.models import Count,Sum
+
 
 # Create your views here.
 def appdash(request):
-    return render(request, "admin_dashboard.html")
+
+    booking_data = (
+        Booking_details.objects
+        .values('service__service')
+        .annotate(total_bookings=Count('booking_master', distinct=True))
+        .order_by('-total_bookings')
+    )
+
+    booking_labels = []
+    booking_counts = []
+
+    for item in booking_data:
+        if item['service__service']:
+            booking_labels.append(item['service__service'])
+            booking_counts.append(item['total_bookings'])
+
+    total_bookings = sum(booking_counts)
+
+
+    revenue_data = (
+        Booking_details.objects
+        .values('service__service')
+        .annotate(total_revenue=Sum('service__amount'))
+        .order_by('-total_revenue')
+    )
+
+    revenue_labels = []
+    revenue_amounts = []
+
+    for item in revenue_data:
+        if item['service__service']:
+            revenue_labels.append(item['service__service'])
+            revenue_amounts.append(item['total_revenue'] or 0)
+
+    total_revenue = sum(revenue_amounts)
+
+
+    context = {
+        'booking_labels': booking_labels,
+        'booking_counts': booking_counts,
+        'revenue_labels': revenue_labels,
+        'revenue_amounts': revenue_amounts,
+        'total_bookings': total_bookings,
+        'total_revenue': total_revenue,
+    }
+
+    return render(request, "admin_dashboard.html", context)
+
 def guestdash(request):
     return render(request, "guestdashboard.html")
 def login_view(request):

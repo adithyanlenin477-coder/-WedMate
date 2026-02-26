@@ -4,7 +4,8 @@ from django.shortcuts import redirect, render
 
 from app_core.models import Category, District, Eventtype, Location
 from app_dashboard.models import Customer, Vendor
-from app_customer.models import Payment
+from app_customer.models import Booking_details, Payment
+from django.db.models import Count
 
 # Create your views here.
 def district(request):
@@ -201,3 +202,27 @@ def admin_payment_list(request):
         'rows': rows,
         'total_admin_earning': total_admin_earning
     })
+
+def admin_booking_report(request):
+
+    service_data = (
+        Booking_details.objects
+        .values('service__service__name')   
+        .annotate(total_bookings=Count('booking_master', distinct=True))
+        .order_by('-total_bookings')
+    )
+
+    labels = []
+    data = []
+
+    for item in service_data:
+        if item['service__service__name']:
+            labels.append(item['service__service__name'])
+            data.append(item['total_bookings'])
+
+    context = {
+        'labels': labels,
+        'data': data,
+    }
+
+    return render(request, 'booking_report.html', context)

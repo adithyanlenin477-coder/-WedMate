@@ -1,186 +1,310 @@
 {% load static %}
-{% include "layout/partials/guest/header.html" %}
-
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ===============================
-   GLOBAL STYLING
-================================= */
-body, html {
+
+/* ================= GLOBAL ================= */
+body {
     margin: 0;
-    padding: 0;
-    height: 100%;
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #fef9f6, #fdfcfb, #f2f2f2);
+    background: #000;
+}
+
+/* ================= SPLIT SCREEN ================= */
+.login-wrapper {
     display: flex;
-    flex-direction: column;
     min-height: 100vh;
 }
 
-/* ===============================
-   HEADER + MAIN ALIGNMENT
-================================= */
-.main-content {
+
+/* ================= LEFT SIDE (UNCHANGED) ================= */
+.brand-section {
+    flex: 1;
+    position: relative;
+    background-position: center 10%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 75px;
+    color: #ffffff;
+    overflow: hidden;
+}
+
+.brand-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1;
+}
+
+.brand-content {
+    position: relative;
+    z-index: 2;
+}
+
+.brand-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 60px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.brand-tagline {
+    font-size: 18px;
+    max-width: 450px;
+    line-height: 1.7;
+    opacity: 0.95;
+}
+
+/* ================= RIGHT SIDE ULTRA LUXURY ================= */
+.form-section {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
-    padding: 40px 20px;
+    overflow: hidden;
+    background: linear-gradient(-45deg, #000000, #111111, #1a1a1a, #000000);
+    background-size: 400% 400%;
+    animation: bgMove 15s ease infinite;
 }
 
-/* ===============================
-   PREMIUM STATIC LOGO TOP LEFT
-================================= */
-.logo-wrapper {
+/* Animated background */
+@keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Soft Gold Glow */
+.form-section::before {
+    content: "";
     position: absolute;
-    top: 30px;
-    left: 50px;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(212,175,55,0.18), transparent 70%);
+    top: -120px;
+    right: -120px;
+    filter: blur(100px);
 }
 
-.logo-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 36px;
-    font-weight: 700;
-    color: #B88A2F; /* Elegant gold color */
-    letter-spacing: 1px;
-}
-
-.logo-subtitle {
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-    color: #8C6C2F;
-    margin-top: 2px;
-    letter-spacing: 0.5px;
-}
-
-/* ===============================
-   PREMIUM LOGIN CARD
-================================= */
+/* ================= FLOATING LUXURY BOX ================= */
 .login-card {
     width: 100%;
-    max-width: 420px;
-    padding: 50px 40px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(200, 180, 120, 0.3);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
+    max-width: 460px;
+    padding: 65px 55px;
+    border-radius: 28px;
+    background: rgba(15, 15, 15, 0.75);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(212,175,55,0.15);
+    box-shadow:
+        0 60px 150px rgba(0,0,0,0.95),
+        0 0 60px rgba(212,175,55,0.15);
+    color: #ffffff;
+    position: relative;
+    animation: floatIn 1.2s ease forwards;
+    transform: translateY(50px);
+    opacity: 0;
+}
+
+/* Entrance animation */
+@keyframes floatIn {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Golden top line */
+.login-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 30%;
+    width: 40%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+}
+
+/* ================= CENTER LUXURY DIVIDER ================= */
+.login-wrapper {
     position: relative;
 }
 
-.login-card h2 {
-    text-align: center;
-    color: #B88A2F;
-    font-weight: 600;
-    letter-spacing: 2px;
-    margin-bottom: 35px;
+/* Main glowing line */
+.login-wrapper::after {
+    content: "";
+    position: absolute;
+    top: 10%;
+    bottom: 10%;
+    left: 55%;
+    width: 2px;
+    transform: translateX(-50%);
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(212,175,55,0.6),
+        #D4AF37,
+        rgba(212,175,55,0.6),
+        transparent
+    );
+    box-shadow:
+        0 0 15px rgba(212,175,55,0.6),
+        0 0 30px rgba(212,175,55,0.4);
+    animation: shimmerLine 3s linear infinite;
+    z-index: 5;
 }
 
-/* Input Fields */
-.form-group { margin-bottom: 20px; }
+/* Moving shimmer effect */
+@keyframes shimmerLine {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 0% 200%; }
+}
+
+/* Hide divider on mobile */
+@media (max-width: 992px) {
+    .login-wrapper::after {
+        display: none;
+    }
+}
+
+/* Header */
+.login-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.login-subtitle {
+    color: #c4c4c4;
+    margin-bottom: 45px;
+    font-size: 14px;
+}
+
+/* Inputs */
+.form-group {
+    margin-bottom: 30px;
+}
 
 .login-card input {
     width: 100%;
-    padding: 14px 18px;
-    border-radius: 12px;
-    border: 1px solid rgba(0,0,0,0.1);
-    background: rgba(255,255,255,0.9);
-    color: #333;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
     font-size: 15px;
     transition: 0.3s ease;
 }
 
-.login-card input::placeholder { color: rgba(0,0,0,0.4); }
 
 .login-card input:focus {
     outline: none;
-    border-color: #B88A2F;
-    background: rgba(255,255,255,1);
-    box-shadow: 0 0 8px rgba(184,138,47,0.2);
+    border-color: #D4AF37;
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 0 20px rgba(212,175,55,0.25);
 }
 
-/* Login Button */
+/* Button */
 .login-btn {
     width: 100%;
-    padding: 14px;
-    border-radius: 12px;
+    padding: 18px;
+    border-radius: 16px;
     border: none;
-    background: #B88A2F; /* Elegant gold */
+    background: linear-gradient(135deg, #B88A2F, #D4AF37);
     color: #fff;
     font-weight: 600;
     letter-spacing: 1px;
     cursor: pointer;
-    transition: 0.3s ease, transform 0.2s;
+    transition: 0.4s ease;
+    box-shadow: 0 25px 50px rgba(184,138,47,0.4);
 }
 
 .login-btn:hover {
-    background: #8C6C2F;
-    transform: translateY(-1px);
+    transform: translateY(-6px);
+    box-shadow: 0 35px 70px rgba(184,138,47,0.6);
 }
 
-/* Extra Links */
+/* Links */
 .extra-links {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 40px;
     font-size: 14px;
-    color: #333;
+    color: #9ca3af;
 }
 
 .extra-links a {
-    color: #B88A2F;
+    color: #D4AF37;
     text-decoration: none;
-    transition: 0.3s;
 }
 
-.extra-links a:hover { text-decoration: underline; }
-
-/* Fade in animation for card */
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.extra-links a:hover {
+    text-decoration: underline;
 }
 
-/* RESPONSIVE */
-@media (max-width: 576px) {
-    .login-card { padding: 35px 25px; }
-    .logo-wrapper { top: 20px; left: 20px; }
-    .logo-text { font-size: 28px; }
-    .logo-subtitle { font-size: 12px; }
+/* Responsive */
+@media (max-width: 992px) {
+    .login-wrapper {
+        flex-direction: column;
+    }
+    .brand-section {
+        text-align: center;
+        padding: 60px 30px;
+        min-height: 300px;
+    }
+    .brand-title {
+        font-size: 40px;
+    }
 }
+
 </style>
 
-<!-- LOGO -->
-<div class="logo-wrapper">
-    <div class="logo-text">WedMate</div>
-    <div class="logo-subtitle">Your Dream Wedding Partner</div>
-</div>
+<div class="login-wrapper">
 
-<!-- MAIN LOGIN CONTENT -->
-<div class="main-content">
-    <div class="login-card">
-        <h2>Welcome Back</h2>
-        <form action="{% url 'app_dashboard:login' %}" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                <input type="text" name="name" placeholder="Username" required>
+    <!-- LEFT SIDE -->
+    <div class="brand-section"
+         style="background-image: url({% static 'vendor/assets/images/loginimage.jpg' %});">
+        <div class="brand-content">
+            <div class="brand-title">WedMate</div>
+            <div class="brand-tagline">
+                Crafting unforgettable wedding experiences with elegance,
+                precision, and timeless luxury.
             </div>
-            <div class="form-group">
-                <input type="password" name="password" placeholder="Password" required>
-            </div>
-            <button type="submit" class="login-btn">Sign In</button>
-        </form>
-        <div class="extra-links">
-            <p>Don't have an account? <a href="{% url 'app_dashboard:select_role' %}">Register</a></p>
         </div>
     </div>
-</div>
 
-{% include "layout/partials/guest/footer.html" %}
+    <!-- RIGHT SIDE -->
+    <div class="form-section">
+        <div class="login-card">
+            <h2>Welcome</h2>
+            <div class="login-subtitle">
+                Sign in to continue to your dashboard
+            </div>
+
+            <form action="{% url 'app_dashboard:login' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="login-btn">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="extra-links">
+                Don't have an account?
+                <a href="{% url 'app_dashboard:select_role' %}">
+                    Create Account
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
