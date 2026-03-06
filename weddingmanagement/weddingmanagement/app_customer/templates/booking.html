@@ -11,11 +11,10 @@
 
             <h3 class="text-center mb-3">Book Service</h3>
 
-          
             <form method="POST">
               {% csrf_token %}
 
-              
+              <!-- Grand Total -->
               <div class="mb-3">
                 <label class="form-label">Grand Total</label>
                 <input type="text" name="grandtotal" class="form-control" value="{{grandtotal}}" readonly>
@@ -27,19 +26,46 @@
                 <input type="date" name="event_date" class="form-control" value="{{date}}" required>
               </div>
 
-              <!-- Venue -->
+              <!-- Auditorium Need -->
               <div class="mb-3">
+                <label class="form-label">Do you need an auditorium?</label>
+                <input type="checkbox" name="auditoriumneed" id="needed">
+              </div>
+
+              <!-- Venue -->
+              <div class="mb-3" id="venueField">
                 <label class="form-label">Venue</label>
                 <input type="text" name="venue" class="form-control" required>
               </div>
 
-              <!-- Number of Participants -->
+              <!-- Auditorium Dropdown -->
+              <div class="mb-3" id="auditoriumField" style="display:none;">
+                <label class="form-label">Select Auditorium</label>
+                <select name="auditorium" class="form-control">
+                  <option value="">Choose Auditorium</option>
+                  {% for i in auditorium %}
+                  <option value="{{i.id}}">{{i.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- Booking Type -->
+              <div class="mb-3" id="timingTypeField" style="display:none;">
+                <label class="form-label">Booking Type</label>
+                <select name="booking_type" class="form-control">
+                  <option value="">Select Type</option>
+                  <option value="half_day">Half Day</option>
+                  <option value="full_day">Full Day</option>
+                </select>
+              </div>
+
+              <!-- Participants -->
               <div class="mb-3">
                 <label class="form-label">Number of Participants</label>
                 <input type="number" name="number_of_participants" class="form-control" min="1" required>
               </div>
 
-              <!-- Time -->
+              <!-- Event Time -->
               <div class="mb-3">
                 <label class="form-label">Event Time</label>
                 <input type="time" name="time" class="form-control" value="{{time}}" required>
@@ -54,6 +80,7 @@
               <button type="submit" class="btn btn-primary w-100">
                 Confirm Booking
               </button>
+
             </form>
 
           </div>
@@ -63,5 +90,40 @@
     </div>
   </div>
 </section>
+
+<script>
+
+const checkbox = document.getElementById("needed");
+const venueInput = document.querySelector("input[name='venue']");
+const auditoriumSelect = document.querySelector("select[name='auditorium']");
+const venueField = document.getElementById("venueField");
+const auditoriumField = document.getElementById("auditoriumField");
+const timingTypeField = document.getElementById("timingTypeField");
+
+checkbox.addEventListener("change", function() {
+
+    if (this.checked) {
+
+        venueField.style.display = "none";
+        auditoriumField.style.display = "block";
+        timingTypeField.style.display = "block";
+
+        venueInput.removeAttribute("required");
+        auditoriumSelect.setAttribute("required","required");
+
+    } else {
+
+        venueField.style.display = "block";
+        auditoriumField.style.display = "none";
+        timingTypeField.style.display = "none";
+
+        venueInput.setAttribute("required","required");
+        auditoriumSelect.removeAttribute("required");
+
+    }
+
+});
+
+</script>
 
 {% include 'layout/partials/customer/footer.html' %}

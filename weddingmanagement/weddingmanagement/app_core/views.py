@@ -1,12 +1,15 @@
 from decimal import Decimal
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
-from app_core.models import Category, District, Eventtype, Location
+from app_core.models import Auditorium, Category, District, Eventtype, Location
 from app_dashboard.models import Customer, Vendor
-from app_customer.models import Booking_details, Payment
+from app_customer.models import Booking_details, Booking_master, Payment
 from django.db.models import Count
-
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
+@login_required(login_url='/login/')
+@never_cache
 # Create your views here.
 def district(request):
     if request.method=="POST":
@@ -19,10 +22,13 @@ def district(request):
         return HttpResponse("<script>alert('Inserted Successfully');window.location='/core/district';</script>")
     else:
             return render(request,'district.html')
+@login_required(login_url='/login/')
+@never_cache
 def dis(request):
     Dis=District.objects.all()
     return render(request,'districtview.html',{'dis':Dis})
-
+@login_required(login_url='/login/')
+@never_cache
 def location(request):
     if request.method=="POST":
         locatname=request.POST.get('locname')
@@ -37,22 +43,26 @@ def location(request):
     else:
         d=District.objects.all()
         return render(request,'location.html',{'dis':d})
-    
-def disdl(request,name):
-    d = District.objects.get(id=name)
-    d.delete()
-    return HttpResponse("<script>alert('Delete Successfully');window.location='/app_core/distview/';</script>")
+def disdl(request, id):
+    district = get_object_or_404(District, id=id)
+    district.delete()
+    return redirect('/app_core/distview/')
+def disup(request, id):
+    district = get_object_or_404(District, id=id)
 
-def disup(request,name):
-    up = District.objects.get(id=name)
-    if request.method=="POST":
-        name = request.POST.get('name')
-        if District.objects.filter(name =name).exists():
-            return HttpResponse("<script>alert('Already Exist');window.location='';</script>")
-        up.name=name
-        up.save()
-        return HttpResponse("<script>alert('Updated Successfully');window.location='/core/distview/';</script>")
-    return render(request,"districtedit.html",{"disv":up})
+    if request.method == "POST":
+        new_name = request.POST.get('name')
+
+        if District.objects.filter(name=new_name).exclude(id=id).exists():
+            return HttpResponse(
+                "<script>alert('Already Exist');window.history.back();</script>"
+            )
+
+        district.name = new_name
+        district.save()
+        return redirect('/app_core/distview/')
+
+    return render(request, "districtedit.html", {"disv": district})
 def locview(request):
     Loc=Location.objects.all()
     return render(request,'locationview.html',{'loc':Loc})
@@ -173,6 +183,63 @@ def vendorview(request):
 def custv(request):
        Cust=Customer.objects.all()
        return render(request,'customertable.html',{'cust':Cust})    
+def get_locations(request):
+    district_id = request.GET.get('district_id')
+    locations = Location.objects.filter(district=district_id).values('id', 'name')
+    return JsonResponse(list(locations), safe=False)
+def auditorium(request):
+    if request.method=="POST":
+        name=request.POST.get('name')
+        hours=request.POST.get('hours')
+        amount=request.POST.get('amount')
+        location=request.POST.get('location')
+        
+        if Auditorium.objects.filter(name=name).exists():
+            return HttpResponse("<script>alert('Auditorium details already exists');window.location='/core/auditorium';</script>")
+        evntobj=Auditorium()
+        evntobj.name=name
+        evntobj.hours=hours
+        evntobj.amount=amount
+        evntobj.location=Location.objects.get(id=location)
+
+        if len(request.FILES) !=0:
+                evntimg=request.FILES['image']
+        else:
+            evntimg='image/default.jpg'
+        evntobj.image=evntimg 
+        evntobj.save()
+        return HttpResponse("<script>alert('Inserted Successfully');window.location='/core/auditorium';</script>")
+    else:
+        district=District.objects.all()
+        return render(request,'auditorium.html',{"district":district})
+def auditoriumview(request):
+    Evnt=Auditorium.objects.all()
+    return render(request,'auditoriumview.html',{'data':Evnt})
+def auditoriumdl(request,id):
+    d =Auditorium.objects.get(id =id)
+    d.delete()
+    return HttpResponse("<script>alert('Delete Successfully');window.location='/core/auditoriumview/';</script>")
+
+def auditoriumup(request,id):
+    up = Auditorium.objects.get(id=id)
+    if request.method=="POST":
+        evntname = request.POST.get('name')
+        hours=request.POST.get('hours')
+        amount=request.POST.get('amount')
+        if Auditorium.objects.filter(name=evntname).exclude(id=id).exists():
+            return HttpResponse("<script>alert('Already Exist');window.location='/core/auditoriumview/';</script>")
+        up.name=evntname
+        up.hours=hours
+        up.amount=amount
+        if len(request.FILES) !=0:
+            img=request.FILES.get('img')
+            up.image=img
+        up.location=Location.objects.get(id=request.POST.get("location"))
+        up.save()
+        return HttpResponse("<script>alert('Updated Successfully');window.location='/core/auditoriumview/';</script>")
+    district=District.objects.all()
+    location=Location.objects.get(id=up.location.id)
+    return render(request,"auditoriumedit.html",{"data":up,"district":district,"location":location})
 
 def admin_payment_list(request):
 
@@ -226,3 +293,20 @@ def admin_booking_report(request):
     }
 
     return render(request, 'booking_report.html', context)
+
+def auditorium_booking_pie_chart(request):
+    auditorium_data = (
+        Booking_master.objects.values('auditorium__name')
+        .annotate(booking_count=Count('id'))
+        .order_by('-booking_count')
+    )
+
+    labels = [item['auditorium__name'] for item in auditorium_data if item['auditorium__name']]
+    data = [item['booking_count'] for item in auditorium_data if item['auditorium__name']]
+
+    context = {
+        'labels': labels,
+        'data': data,
+    }
+
+    return render(request, 'auditorium_report.html', context)

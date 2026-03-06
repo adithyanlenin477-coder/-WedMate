@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from app_vendor.models import  Staff, StaffAssignment
+from django.utils.timezone import localtime
+from openpyxl import Workbook
 
 from app_dashboard.models import Vendor, VendorService
 from app_core.models import Category
@@ -275,3 +277,83 @@ def assign_staff(request, booking_id):
         'booking': booking,
         'staff_members': staff_members
     })
+    
+
+
+
+def payment_report(request):
+
+    customer = request.user
+
+    data = Booking_details.objects.filter(
+        customer=customer,
+        status='Paid'
+    )
+
+    return render(request, 'paymentreport.html', {'data': data})
+
+
+def vendor_payment_report_excel(request):
+
+    vendor = request.user
+
+    payments = (
+        Payment.objects
+        .select_related('booking', 'booking__customer')
+        .prefetch_related('booking__details__service')
+        .order_by('-payment_date')
+    )
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Vendor Payments"
+
+    headers = [
+        'Payment Date',
+        'Customer',
+        'Service',
+        'Service Amount',
+        'Advance Paid',
+        'Admin Share (20%)',
+        'Vendor Amount'
+    ]
+
+    ws.append(headers)
+
+    for payment in payments:
+
+        vendor_services = payment.booking.details.filter(
+            service__vendor=vendor
+        )
+
+        if not vendor_services.exists():
+            continue
+
+        advance_amount = payment.amount
+        admin_share = (advance_amount * Decimal('0.20')).quantize(Decimal('0.01'))
+        vendor_net = (advance_amount - admin_share).quantize(Decimal('0.01'))
+
+        for detail in vendor_services:
+
+            service_name = detail.service.service
+            service_amount = detail.service.amount
+
+            ws.append([
+                payment.payment_date.strftime("%Y-%m-%d"),
+                payment.booking.customer.username,
+                service_name,
+                float(service_amount),
+                float(advance_amount),
+                float(admin_share),
+                float(vendor_net)
+            ])
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+
+    response['Content-Disposition'] = 'attachment; filename="vendor_payment_report.xlsx"'
+
+    wb.save(response)
+
+    return response

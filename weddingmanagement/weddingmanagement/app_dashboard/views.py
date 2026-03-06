@@ -2,7 +2,8 @@
 
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
+
 
 from app_dashboard.models import Customer, Vendor, VendorService
 from app_core.models import Category, Eventtype
@@ -64,6 +65,8 @@ def appdash(request):
 
 def guestdash(request):
     return render(request, "guestdashboard.html")
+
+
 def login_view(request):
     if request.method=='POST':        
         uname = request.POST.get('name')
@@ -76,10 +79,10 @@ def login_view(request):
                 return HttpResponse("<script>alert('Login succesfull');window.location='/admin/';</script>")
             elif user.role=="vendors":
                 login(request,user)
-                return HttpResponse("<script>alert('Login succesfull');window.location='/vendordash/';</script>")
+                return HttpResponse("<script>alert('Login successfull');window.location='/vendordash/';</script>")
             elif user.role=="client":
                 login(request,user)
-                return HttpResponse("<script>alert('Login succesfull');window.location='/customerdash/';</script>")
+                return HttpResponse("<script>alert('Login successfull');window.location='/customerdash/';</script>")
         else:
             return HttpResponse("<script>alert('incorrect password');window.location='/login/';</script>")
     return render(request, "login.html")
@@ -116,7 +119,7 @@ def reg_view(request):
                 vendor=u,
                 service_id=sid,
             )
-        return HttpResponse("<script>alert('Register succesfull');window.location='/registration/';</script>")
+        return HttpResponse("<script>alert('Registration succesfull');window.location='/registration/';</script>")
     d=Category.objects.all()
     return render(request,'vendorreg.html',{'cat':d})
 
@@ -152,7 +155,7 @@ def customer_view(request):
         c.address=address
         c.user=u
         c.save()
-        return HttpResponse("<script>alert('Register succesfull');window.location='/customerreg/';</script>")
+        return HttpResponse("<script>alert('Registration succesfull');window.location='/login/';</script>")
     return render(request, "customerreg.html")
 def customer_dash(request):
     events = Eventtype.objects.all()
@@ -176,3 +179,7 @@ def vendor_dashboard(request):
     return render(request, 'vendor_dashboard.html', {
         'categories': categories
     })
+
+def logout_view(request):
+    logout(request)
+    return HttpResponse("<script>alert('Logged out successfully');window.location='/login/';</script>")    

@@ -14,5 +14,7 @@ path('gallery/add/', views.gallery, name='gallery_add'),
 path('gallery/edit/<int:id>/', views.gallery_edit, name='gallery_edit'),
 path('gallery/delete/<int:id>/', views.gallery_delete, name='gallery_delete'),
 path('bookings/', views.vendor_bookings, name='vendor_bookings'),
-path('assign-staff/<int:booking_id>/', views.assign_staff, name='assign_staff'),    
+path('assign-staff/<int:booking_id>/', views.assign_staff, name='assign_staff'),
+path('payment_report/', views.payment_report, name='payment_report'),
+path('vendor_payment_report_excel/', views.vendor_payment_report_excel, name='vendor_payment_report_excel'),  
 ]

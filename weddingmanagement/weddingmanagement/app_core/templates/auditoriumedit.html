@@ -1,0 +1,72 @@
+
+            {% include "layout/partials/admin/header.html" %}
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+    $(document).ready(function() {
+
+        $("#district").change(function() {
+            var districtId = $(this).val();
+
+            $.ajax({
+                url: "{% url 'app_core:get_locations' %}",
+                data: {
+                    'district_id': districtId
+                },
+                success: function(data) {
+
+                    $("#location").html('<option value="">Choose Location</option>');
+
+                    $.each(data, function(key, value) {
+                        $("#location").append(
+                            '<option value="' + value.id + '">' + value.name + '</option>'
+                        );
+                    });
+
+                }
+            });
+
+        });
+
+    });
+</script>
+           <!-- Form Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-12 col-xl-6">
+                        <div class="bg-secondary rounded h-100 p-4">
+                            <h6 class="mb-4">Basic Form</h6>
+                                <form action="{% url 'app_core:auditoriumup' data.id %}" method="post" enctype="multipart/form-data">
+			                    {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="exampleInputEventtype" class="form-label">Auditorim name</label>
+                                    <input type="text" name="name" class="form-control" id="exampleInputEventtype" required value="{{data.name}}">
+                                    <label for="exampleInputDescription" class="form-label">Hours</label>
+                                    <input type="text" name="hours" class="form-control" id="exampleInputDescription" required value="{{data.hours}}">
+                                    <label for="exampleInputDescription" class="form-label">Amount</label>
+                                    <input type="text" name="amount" class="form-control" id="exampleInputDescription" required value="{{data.amount}}">
+                                    <label for="exampleInputDescription" class="form-label">District</label>
+                                    <select name="district" id="district" class="form-control">
+                                        <option value="">Choose District</option>
+                                        {% for i in district %}
+                                        <option value="{{i.id}}"  {% if i.id == data.location.district.id %}selected{% endif %}>{{i.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                     <label for="exampleInputDescription" class="form-label">Location</label>
+                                    <select name="location" id="location" class="form-control">
+                                        <option value="{{location.id}}">{{location.name}}   </option>
+                                       
+                                    </select>
+
+                                    <label for="exampleInputDescription" class="form-label">Image</label>
+                                    <img src="/media/{{data.image}}" alt="" width="50px" height="50px">
+                                    <input type="hidden" name="oldimage" id="" value="{{i.image}}">
+                                    <input type="file" name="image" class="form-control" id="exampleInputImage" >
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+            {% include "layout/partials/admin/footer.html" %}

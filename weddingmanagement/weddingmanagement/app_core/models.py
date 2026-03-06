@@ -15,5 +15,10 @@ class Eventtype(models.Model):
     description=models.CharField()
     image=models.ImageField(upload_to="media/",null=True)    
         
-
-    
+class Auditorium(models.Model):
+    name=models.CharField()
+    hours=models.IntegerField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    image=models.ImageField(upload_to="media/",null=True)    
+    location=models.ForeignKey(Location,on_delete=models.CASCADE)
+        

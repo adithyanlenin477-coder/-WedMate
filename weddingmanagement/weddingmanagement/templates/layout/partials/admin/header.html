@@ -68,7 +68,7 @@
                             <a href="{% url 'app_core:locview' %}" class="dropdown-item">Location View</a>
                             <a href="{% url 'app_core:catv' %}" class="dropdown-item">Category View</a>
                             <a href="{% url 'app_core:evtv' %}" class="dropdown-item">Event View</a>
-                           
+                            <a href="{% url 'app_core:auditoriumview' %}" class="dropdown-item">Auditorium View</a>
 
                         </div>
                     </div>
@@ -85,6 +85,7 @@
                             <a href="{% url 'app_core:location' %}" class="dropdown-item">Location</a>
                             <a href="{% url 'app_core:category' %}" class="dropdown-item">Category</a>
                             <a href="{% url 'app_core:eventtype' %}" class="dropdown-item">Events</a>
+                            <a href="{% url 'app_core:auditorium' %}" class="dropdown-item">Auditorium</a>
                             <!-- <a href="" class="dropdown-item">Department</a>
                             <a href="" class="dropdown-item">Course</a> -->
                             <!--a href="blank.html" class="dropdown-item">Blank Page</a-->
@@ -181,8 +182,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">My Profile</a>
-                            <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
+                            <a href="{% url 'app_dashboard:logout' %}" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
                 </div>

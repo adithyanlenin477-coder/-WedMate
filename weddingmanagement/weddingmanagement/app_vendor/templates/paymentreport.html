@@ -1,0 +1,87 @@
+{% include "layout/partials/vendor/header.html" %}
+
+<div class="container">
+    <div class="page-inner">
+
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Payment Report</h3>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="card">
+
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="card-title">Payments</div>
+
+                        <a href="{% url 'app_vendor:vendor_payment_report_excel' %}" class="btn btn-success btn-sm">
+                            <i class="fas fa-file-excel"></i> Download Excel
+                        </a>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover">
+
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Service</th>
+                                        <th>Service Amount</th>
+                                        <th>Advance Paid</th>
+                                        <th>Vendor Amount</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    {% for row in vendor_rows %}
+                                        {% for service in row.services %}
+
+                                        <tr>
+                                            <td>{{ forloop.parentloop.counter }}</td>
+
+                                            <td>{{ service.service.service_name }}</td>
+
+                                            <td>₹{{ service.service.amount }}</td>
+
+                                            <td>₹{{ row.advance_amount }}</td>
+
+                                            <td>₹{{ row.vendor_net }}</td>
+
+                                            <td>{{ row.payment.payment_date }}</td>
+                                        </tr>
+
+                                        {% endfor %}
+
+                                    {% empty %}
+
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            No payments available.
+                                        </td>
+                                    </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% include "layout/partials/vendor/footer.html" %}

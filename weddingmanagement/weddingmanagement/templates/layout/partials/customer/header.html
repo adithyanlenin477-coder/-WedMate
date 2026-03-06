@@ -68,11 +68,11 @@ https://templatemo.com/tm-569-edu-meeting
                       <!-- ***** Logo End ***** -->
                       <!-- ***** Menu Start ***** -->
                       <ul class="nav">
-                          <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
-                          <li><a href="meetings.html">Meetings</a></li>
+                          <li><a href="{% url 'app_dashboard:customerdash' %}">Home</a></li>
+                          <li><a href="{% url 'app_customer:my_bookings' %}">My Bookings</a></li>
                           <li class="nav-item d-flex align-items-center">
                           <a class="nav-link py-0" href="{% url 'app_customer:servicev' %}">
-                              Apply Now
+                              Book Now
                           </a>
                           </li>
                           <li class="has-sub">
@@ -82,8 +82,14 @@ https://templatemo.com/tm-569-edu-meeting
                                   <!-- <li><a href="meeting-details.html">Meeting Details</a></li> -->
                               </ul>
                           </li>
-                          <li class="scroll-to-section"><a href="#courses">Courses</a></li> 
-                          <li class="scroll-to-section"><a href="#contact">Contact Us</a></li> 
+                          <li class="has-sub">
+                            <a href="javascript:void(0)">Contact Us</a>
+                            <ul class="sub-menu">
+                                <li><a href="tel:8138862178">8138862178</a></li>
+                                <li><a href="tel:9562918701">9562918701</a></li>
+                            </ul>
+                        </li> 
+                          <li><a href="{% url 'app_dashboard:logout' %}">Log Out</a></li> 
                       </ul>        
                       <a class='menu-trigger'>
                           <span>Menu</span>

@@ -17,6 +17,8 @@ urlpatterns = [
     path('customer-register/', views.customer_view, name="customer_register"),
     path('events/', views.event_list, name='event_list'),
     path('dashboard/', views.vendor_dashboard, name='vendor_dashboard'),
+    path("logout/",views.logout_view,name='logout'),
 ]
+
 
 
