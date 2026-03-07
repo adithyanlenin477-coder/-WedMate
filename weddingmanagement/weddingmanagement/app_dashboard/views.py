@@ -65,7 +65,8 @@ def appdash(request):
 
 def guestdash(request):
     return render(request, "guestdashboard.html")
-
+def home_view(request):
+    return render(request, "home.html")
 
 def login_view(request):
     if request.method=='POST':        
@@ -182,4 +183,4 @@ def vendor_dashboard(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponse("<script>alert('Logged out successfully');window.location='/login/';</script>")    
+    return HttpResponse("<script>alert('Logged out successfully');window.location='/home_view   /';</script>")    

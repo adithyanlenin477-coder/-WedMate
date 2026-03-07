@@ -18,6 +18,7 @@ urlpatterns = [
     path('events/', views.event_list, name='event_list'),
     path('dashboard/', views.vendor_dashboard, name='vendor_dashboard'),
     path("logout/",views.logout_view,name='logout'),
+    path("home/",views.home_view,name='home'),
 ]
 
 

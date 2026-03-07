@@ -1,0 +1,291 @@
+{% load static %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:#000;
+color:white;
+overflow-x:hidden;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:22px 80px;
+z-index:1000;
+
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(10px);
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.logo{
+font-family:'Playfair Display',serif;
+font-size:34px;
+font-weight:700;
+letter-spacing:1px;
+}
+
+/* menu */
+
+.nav-menu{
+display:flex;
+gap:35px;
+}
+
+.nav-menu a{
+text-decoration:none;
+color:white;
+font-size:15px;
+opacity:0.9;
+transition:0.3s;
+}
+
+.nav-menu a:hover{
+color:#D4AF37;
+}
+
+/* buttons */
+
+.nav-buttons a{
+margin-left:18px;
+padding:10px 24px;
+border-radius:30px;
+text-decoration:none;
+font-size:14px;
+transition:0.3s;
+}
+
+.login-btn{
+border:1px solid #D4AF37;
+color:#D4AF37;
+}
+
+.login-btn:hover{
+background:#D4AF37;
+color:black;
+}
+
+.register-btn{
+background:#D4AF37;
+color:black;
+font-weight:500;
+}
+
+.register-btn:hover{
+background:#e5c65b;
+transform:translateY(-2px);
+}
+
+/* ================= HERO ================= */
+
+.hero{
+height:100vh;
+position:relative;
+overflow:hidden;
+}
+
+/* video */
+
+.hero video{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* overlay */
+
+.overlay{
+position:absolute;
+inset:0;
+background:linear-gradient(
+to bottom,
+rgba(0,0,0,0.4),
+rgba(0,0,0,0.8)
+);
+}
+
+/* hero content */
+
+.hero-content{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+max-width:900px;
+padding:20px;
+}
+
+/* title */
+
+.hero-title{
+font-family:'Playfair Display',serif;
+font-size:78px;
+line-height:1.2;
+margin-bottom:25px;
+}
+
+/* subtitle */
+
+.hero-text{
+font-size:20px;
+opacity:0.9;
+line-height:1.7;
+}
+
+/* buttons */
+
+.hero-buttons{
+margin-top:40px;
+}
+
+.cta-btn{
+display:inline-block;
+padding:16px 40px;
+background:#D4AF37;
+border-radius:40px;
+text-decoration:none;
+color:black;
+font-weight:600;
+margin-right:15px;
+transition:0.3s;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+.cta-btn:hover{
+background:#e5c65b;
+transform:translateY(-3px);
+}
+
+.cta-outline{
+display:inline-block;
+padding:16px 38px;
+border:1px solid white;
+border-radius:40px;
+text-decoration:none;
+color:white;
+font-weight:500;
+transition:0.3s;
+}
+
+.cta-outline:hover{
+background:white;
+color:black;
+}
+
+/* scroll indicator */
+
+.scroll-down{
+position:absolute;
+bottom:30px;
+left:50%;
+transform:translateX(-50%);
+font-size:13px;
+opacity:0.7;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:900px){
+
+.navbar{
+padding:20px 30px;
+}
+
+.nav-menu{
+display:none;
+}
+
+.hero-title{
+font-size:46px;
+}
+
+.hero-text{
+font-size:16px;
+}
+
+}
+
+</style>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<div class="navbar">
+
+<div class="logo">WedMate</div>
+
+<div class="nav-menu">
+<a href="{% url 'app_dashboard:login' %}">Services</a>
+<a href="{% url 'app_dashboard:login' %}">Vendors</a>
+<a href="{% url 'app_dashboard:login' %}">Gallery</a>
+<a href="{% url 'app_dashboard:login' %}">Book Now</a>
+</div>
+
+<div class="nav-buttons">
+<a href="{% url 'app_dashboard:login' %}" class="login-btn">Login</a>
+<a href="{% url 'app_dashboard:select_role' %}" class="register-btn">Register</a>
+</div>
+
+</div>
+
+
+<!-- ================= HERO ================= -->
+
+<div class="hero">
+
+<video autoplay muted loop playsinline>
+<source src="{% static 'admin/img/home.mp4' %}" type="video/mp4">
+</video>
+
+<div class="overlay"></div>
+
+<div class="hero-content">
+
+<div class="hero-title">
+Plan Your Dream Wedding
+</div>
+
+<div class="hero-text">
+Discover stunning venues, elegant decorations, professional catering,
+and trusted wedding vendors — all in one place.
+WedMate makes wedding planning effortless and unforgettable.
+</div>
+
+<div class="hero-buttons">
+
+<a href="{% url 'app_dashboard:select_role' %}" class="cta-btn">
+Get Started
+</a>
+
+<a href="#" class="cta-outline">
+Explore Services
+</a>
+
+</div>
+
+</div>
+
+<div class="scroll-down">
+Scroll Down ↓
+</div>
+
+</div>
